@@ -7,7 +7,9 @@ import TodoList from './components/TodoList';
 function App() {
   const [todos, setTodos] = useState<TodoListProps[]>([]);
   const [input, setInput] = useState('');
+  const [editId, setEditId] = useState<number | null>(null);
 
+  // todo追加
   const addTodo = () => {
     if (input) {
       setTodos([...todos, { id: Date.now(), text: input }]);
@@ -17,11 +19,30 @@ function App() {
     }
   };
 
+  // 削除
   const deleteTodo = (id: number) => {
     setTodos(todos.filter(todo => todo.id !== id)); // todo.id が id と一致しない todo だけを残す新しい配列を作成
   };
 
-  // console.log(todos);
+  // 編集
+  const editTodo = (id: number) => {
+    const todoToEdit = todos.find(todo => todo.id === id); // todo.id が指定された id と一致するかどうかをチェック
+    if (todoToEdit) {
+      setInput(todoToEdit.text);
+      setEditId(id);
+    }
+  };
+
+  // 保存
+  const saveTodo = () => {
+    if (editId !== null) { // trueの場合
+      setTodos(todos.map(todo => 
+        todo.id === editId ? { ...todo, text: input } : todo
+      ));
+      setInput('');
+      setEditId(null);
+    }
+  };
 
 
   return (
@@ -31,7 +52,10 @@ function App() {
         flexDirection="column"
         alignItems="center"
       >
-        <Push clickOption={{add: addTodo, set: setInput, text: input}}  />
+        <Push 
+          clickOption={{add: addTodo, set: setInput, text: input}} 
+          isEditing={editId !== null}
+          />
         <Box 
           height={300}
           width={1}
@@ -45,7 +69,14 @@ function App() {
         >
         {
           todos.map((todo) => (
-            <TodoList key={todo.id} todo={todo} deleteTodo={deleteTodo} />
+            <TodoList 
+              key={todo.id} 
+              todo={todo} 
+              clickOption = {{deleteTodo: deleteTodo, editTodo:editTodo, saveTodo:saveTodo}} 
+              isEditing={editId === todo.id}
+              input={input}
+              setInput={setInput}
+            />
           ))
         }
         </Box>
