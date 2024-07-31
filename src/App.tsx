@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import { Container, Box } from '@mui/material';
 import { TodoListProps } from './types/todo';
 import Push from './components/Push';
@@ -13,7 +13,6 @@ function App() {
    useEffect(() => {
     const storedTodos = localStorage.getItem('todos');
     if (storedTodos) {
-      console.log(storedTodos);
       setTodos(JSON.parse(storedTodos));
     }
   }, []);
@@ -23,11 +22,10 @@ function App() {
     localStorage.setItem('todos', JSON.stringify(todos));
   }, [todos]);
 
-  
   // todo追加
   const addTodo = () => {
     if (input) {
-      setTodos([...todos, { id: Date.now(), text: input }]);
+      setTodos([...todos, { id: Date.now(), text: input , bool: false}]);
       setInput('');
     } else {
       return;
@@ -57,6 +55,17 @@ function App() {
       setInput('');
       setEditId(null);
     }
+  };
+
+  // 選択状態を切り替える関数
+  const toggleSelected = (id: number) => {
+    setTodos(prevTodos => {
+      // trueの場合、
+      const updatedTodos = prevTodos.map(todo =>
+        todo.id === id ? { ...todo, bool: !todo.bool } : todo
+      );
+      return updatedTodos.sort((a, b) => Number(a.bool) - Number(b.bool));
+    });
   };
 
 
@@ -91,7 +100,8 @@ function App() {
               isEditing={editId === todo.id}
               input={input}
               setInput={setInput}
-            />
+              toggleSelected={() => toggleSelected(todo.id)}
+              />
           ))
         }
         </Box>
