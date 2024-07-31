@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Container, Box } from '@mui/material';
 import { TodoListProps } from './types/todo';
 import Push from './components/Push';
@@ -9,6 +9,21 @@ function App() {
   const [input, setInput] = useState('');
   const [editId, setEditId] = useState<number | null>(null);
 
+   // ローカルストレージからデータを読み込む
+   useEffect(() => {
+    const storedTodos = localStorage.getItem('todos');
+    if (storedTodos) {
+      console.log(storedTodos);
+      setTodos(JSON.parse(storedTodos));
+    }
+  }, []);
+
+  // todosが変更されるたびにローカルストレージに保存する
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]);
+
+  
   // todo追加
   const addTodo = () => {
     if (input) {
