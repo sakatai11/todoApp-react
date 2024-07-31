@@ -7,9 +7,10 @@ type InputProps = {
     set: (textInput: string) => void;
     text: string;
   }
+  isEditing: boolean
 }
 
-const Push = ({clickOption}:InputProps) => {
+const Push = ({clickOption, isEditing}:InputProps) => {
 const { add, set, text } = clickOption;
 
   return (
@@ -22,15 +23,26 @@ const { add, set, text } = clickOption;
       alignItems: "center",
     }}
     >
-      <TextField 
-        variant="outlined" 
-        label="入力" 
-        type="text" 
-        value={text}
-        onChange={(e) => set(e.target.value)}
-      >
-        {text}
-      </TextField>
+      {
+        !isEditing ? (
+          <TextField 
+          variant="outlined" 
+          label="入力" 
+          type="text" 
+          value={text}
+          onChange={(e) => set(e.target.value)}
+        >
+          {text}
+        </TextField>
+        ):(
+          <TextField 
+            variant="outlined" 
+            label="入力" 
+            type="text" 
+            value={''}
+          />
+        )
+      }
       <Button 
         variant="contained" 
         onClick={add}>追加

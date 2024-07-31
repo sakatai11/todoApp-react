@@ -5,10 +5,14 @@ type DeleteProp = {
 }
 
 const Delete = ({onDelete}:DeleteProp) => {
+
   return (
     <Button 
       variant="outlined"
       onClick={onDelete}
+      sx={{
+        marginLeft: 1,
+      }}
     >
       削除
     </Button>

@@ -1,13 +1,24 @@
 import { TodoListProps } from '../types/todo';
 import Delete from './Delete';
-import {Box} from '@mui/material';
+import Edit from './Edit';
+import { Box,TextField, Button } from '@mui/material';
 
 type TodoProps = {
   todo: TodoListProps;
-  deleteTodo: (id: number) => void;
+  clickOption : {
+    deleteTodo: (id: number) => void;
+    editTodo:  (id: number) => void;
+    saveTodo: () => void;
+  }
+  isEditing: boolean;
+  input: string;
+  setInput: (text: string) => void;
 }
 
-const TodoList = ({todo, deleteTodo}:TodoProps) => {
+const TodoList = ({todo, clickOption, isEditing, input , setInput}:TodoProps) => {
+
+  const { deleteTodo, editTodo, saveTodo } = clickOption;
+
   return (
     <Box 
       width={1}
@@ -22,8 +33,24 @@ const TodoList = ({todo, deleteTodo}:TodoProps) => {
         borderRadius: 1, // 角を丸くする
       }}
     >
-      {todo.text}
-      <Delete onDelete={() => deleteTodo(todo.id)}/>
+       {isEditing ? (
+        <TextField 
+          variant="outlined" 
+          type="text" 
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+      ) : (
+        <span>{todo.text}</span>
+      )}
+      <div>
+        {isEditing ? (
+          <Button variant="outlined" onClick={saveTodo}>保存</Button>
+        ) : (
+          <Edit onEdit={() => editTodo(todo.id)} />
+        )}
+        <Delete onDelete={() => deleteTodo(todo.id)} />
+      </div>
     </Box>
   );
 }
