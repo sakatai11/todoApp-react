@@ -45,7 +45,7 @@ const TodoList = ({todo, clickOption, isEditing, input , setInput, toggleSelecte
         height: 20,
       }}
     >
-    <CheckIcon />
+      {todo.bool ? <CheckIcon /> : null}
     </ToggleButton>
        {isEditing ? (
         <TextField 
