@@ -25,7 +25,11 @@ function App() {
   // todo追加
   const addTodo = () => {
     if (input) {
-      setTodos([...todos, { id: Date.now(), text: input , bool: false}]);
+      const newTodo = { id: Date.now(), text: input, bool: false };
+      setTodos(prevTodos => {
+        const updatedTodos = [...prevTodos, newTodo];
+        return updatedTodos.sort((a, b) => b.id - a.id); // 降順にする
+      });
       setInput('');
     } else {
       return;
@@ -64,7 +68,7 @@ function App() {
       const updatedTodos = prevTodos.map(todo =>
         todo.id === id ? { ...todo, bool: !todo.bool } : todo
       );
-      return updatedTodos.sort((a, b) => Number(a.bool) - Number(b.bool));
+      return updatedTodos.sort((a, b) => Number(a.bool) - Number(b.bool)); // 降順にする
     });
   };
 
