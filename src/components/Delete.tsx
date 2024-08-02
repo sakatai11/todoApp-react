@@ -1,22 +1,21 @@
-import { Button } from '@mui/material';
+import { Button } from "@mui/material";
 
 type DeleteProp = {
-  onDelete: () => void;
-}
+	onDelete: () => void;
+};
 
-const Delete = ({onDelete}:DeleteProp) => {
-
-  return (
-    <Button 
-      variant="outlined"
-      onClick={onDelete}
-      sx={{
-        marginLeft: 1,
-      }}
-    >
-      削除
-    </Button>
-  );
-}
+const Delete = ({ onDelete }: DeleteProp) => {
+	return (
+		<Button
+			variant="outlined"
+			onClick={onDelete}
+			sx={{
+				marginLeft: 1,
+			}}
+		>
+			削除
+		</Button>
+	);
+};
 
 export default Delete;

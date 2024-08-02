@@ -1,5 +1,6 @@
 export type TodoListProps = {
-  id: number;
-  text: string;
-  bool: boolean;
+	id?: string;
+	time: number;
+	text: string;
+	bool: boolean;
 };
