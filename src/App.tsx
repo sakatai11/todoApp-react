@@ -41,11 +41,9 @@ function App() {
 		if (input) {
 			const newTodo = { time: Date.now(), text: input, bool: false };
 			const docRef = await addDoc(collection(db, "todos"), newTodo);
-			setTodos((prevTodos) => {
-				const updatedTodos = [...prevTodos, { id: docRef.id, ...newTodo }];
-				return updatedTodos.sort((a, b) => b.time - a.time); // 降順にする
-			});
+			setTodos((prevTodos) => [...prevTodos, { id: docRef.id, ...newTodo }]);
 			setInput("");
+			fetchTodos();
 		} else {
 			return;
 		}
@@ -80,7 +78,6 @@ function App() {
 				);
 				setInput("");
 				setEditId(null);
-				// fetchTodos();
 			}
 		}
 	};
