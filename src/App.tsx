@@ -41,9 +41,15 @@ function App() {
 		if (input) {
 			const newTodo = { time: Date.now(), text: input, bool: false };
 			const docRef = await addDoc(collection(db, "todos"), newTodo);
-			setTodos((prevTodos) => [...prevTodos, { id: docRef.id, ...newTodo }]);
+			setTodos((prevTodos) => {
+				const updatedTodos = [...prevTodos, { id: docRef.id, ...newTodo }];
+				return updatedTodos.sort((a, b) => {
+					const boolComparison = Number(a.bool) - Number(b.bool);
+					const timeComparison = b.time - a.time;
+					return boolComparison || timeComparison; // 両方の条件を実行
+			});
+			});
 			setInput("");
-			fetchTodos();
 		} else {
 			return;
 		}
