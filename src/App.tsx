@@ -3,6 +3,8 @@ import { Container, Box } from "@mui/material";
 import { TodoListProps } from "./types/todo";
 import Push from "./components/Push";
 import TodoList from "./components/TodoList";
+import Title from "./components/statusBox/Title";
+import { statuses } from "./status/statuses";
 // firebase
 import { db } from "./utils/firebase";
 import {
@@ -110,43 +112,53 @@ function App() {
 	}, []);
 
 	return (
-		<Container maxWidth="xs">
-			<Box display="flex" flexDirection="column" alignItems="center">
+		<Container maxWidth="lg">
 				<Push
 					clickOption={{ add: addTodo, set: setInput, text: input }}
 					isEditing={editId !== null}
-				/>
-				<Box
-					height={300}
-					width={1}
-					mt={4}
-					display="flex"
-					flexDirection="column"
-					alignItems="center"
-					sx={{ border: "2px solid #cacaca", overflow: "auto" }}
-					borderRadius={2}
-					p={2}
+				/>		
+
+			<Box display="flex" alignItems="center" justifyContent="center" flexWrap="wrap" gap={3} mt={3}>
+				{
+					statuses.map((status) => (
+				<Box 
+					width="auto"
+					flexGrow={1}
+					key={status.title}
 				>
-					{todos.map((todo) => (
-						<TodoList
-							key={todo.id}
-							todo={todo}
-							clickOption={{
-								deleteTodo: deleteTodo,
-								editTodo: editTodo,
-								saveTodo: saveTodo,
-							}}
-							isEditing={editId === todo.id}
-							input={input}
-							setInput={setInput}
-							toggleSelected={() => {
-								if (todo.id) {
-									toggleSelected(todo.id);
-								}
-							}} // idがundefinedでないことを確認
-						/>
-					))}
+					<Title title={status.title} />
+					<Box
+						height={300}
+						display="flex"
+						flexDirection="column"
+						alignItems="center"
+						sx={{ border: "2px solid #cacaca", overflow: "auto" }}
+						borderRadius={2}
+						p={2}
+					>
+						{todos.map((todo) => (
+							<TodoList
+								key={todo.id}
+								todo={todo}
+								clickOption={{
+									deleteTodo: deleteTodo,
+									editTodo: editTodo,
+									saveTodo: saveTodo,
+								}}
+								isEditing={editId === todo.id}
+								input={input}
+								setInput={setInput}
+								toggleSelected={() => {
+									if (todo.id) {
+										toggleSelected(todo.id);
+									}
+								}} // idがundefinedでないことを確認
+							/>
+						))}
+					</Box>
 				</Box>
+					))
+				}
 			</Box>
 		</Container>
 	);
