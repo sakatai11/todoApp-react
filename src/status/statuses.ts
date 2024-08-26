@@ -1,11 +1,10 @@
 export const statuses = [
 	{
-		title: 'Todo'
+		title: 'Todo',
+		bool: false
 	},
 	{
-		title: 'Doing'
-	},
-	{
-		title: 'Completion'
+		title: 'Completion',
+		bool: true
 	},
 ];

@@ -80,18 +80,22 @@ const TodoList = ({
 				</Box>
 			)}
 			<Box display="flex" alignItems="center">
-				{isEditing ? (
-					<Button variant="outlined" onClick={saveTodo}>
-						保存
-					</Button>
+				{!todo.bool ? (
+					isEditing ? (
+						<Button variant="outlined" onClick={saveTodo}>
+							保存
+						</Button>
+					) : (
+						<Edit
+							onEdit={() => {
+								if (todo.id) {
+									editTodo(todo.id);
+								}
+							}}
+						/>
+					)
 				) : (
-					<Edit
-						onEdit={() => {
-							if (todo.id) {
-								editTodo(todo.id);
-							}
-						}}
-					/>
+					null
 				)}
 				<Delete
 					onDelete={() => {

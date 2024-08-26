@@ -41,7 +41,7 @@ function App() {
 	// todo追加
 	const addTodo = async () => {
 		if (input) {
-			const newTodo = { time: Date.now(), text: input, bool: false };
+			const newTodo = { time: Date.now(), text: input, bool: false};
 			const docRef = await addDoc(collection(db, "todos"), newTodo);
 			setTodos((prevTodos) => {
 				const updatedTodos = [...prevTodos, { id: docRef.id, ...newTodo }];
@@ -98,7 +98,7 @@ function App() {
 				todo.id === id ? { ...todo, bool: !todo.bool } : todo
 			);
 			return updatedTodos.sort((a, b) => Number(a.bool) - Number(b.bool)); // 降順にする
-		});
+	});
 		// 更新するboolの値を取得
 		const todoToUpdate = todos.find((todo) => todo.id === id);
 		if (todoToUpdate) {
@@ -122,7 +122,6 @@ function App() {
 				{
 					statuses.map((status) => (
 				<Box 
-					width="auto"
 					flexGrow={1}
 					key={status.title}
 				>
@@ -136,7 +135,7 @@ function App() {
 						borderRadius={2}
 						p={2}
 					>
-						{todos.map((todo) => (
+						{todos.filter((todo) => status.bool === todo.bool).map((todo) => (
 							<TodoList
 								key={todo.id}
 								todo={todo}
