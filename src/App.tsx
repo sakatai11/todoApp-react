@@ -41,7 +41,7 @@ function App() {
 	// todo追加
 	const addTodo = async () => {
 		if (input) {
-			const newTodo = { time: Date.now(), text: input, bool: false};
+			const newTodo = { time: Date.now(), text: input, bool: false };
 			const docRef = await addDoc(collection(db, "todos"), newTodo);
 			setTodos((prevTodos) => {
 				const updatedTodos = [...prevTodos, { id: docRef.id, ...newTodo }];
@@ -49,7 +49,7 @@ function App() {
 					const boolComparison = Number(a.bool) - Number(b.bool);
 					const timeComparison = b.time - a.time;
 					return boolComparison || timeComparison; // 両方の条件を実行
-			});
+				});
 			});
 			setInput("");
 		} else {
@@ -98,7 +98,7 @@ function App() {
 				todo.id === id ? { ...todo, bool: !todo.bool } : todo
 			);
 			return updatedTodos.sort((a, b) => Number(a.bool) - Number(b.bool)); // 降順にする
-	});
+		});
 		// 更新するboolの値を取得
 		const todoToUpdate = todos.find((todo) => todo.id === id);
 		if (todoToUpdate) {
@@ -113,51 +113,55 @@ function App() {
 
 	return (
 		<Container maxWidth="lg">
-				<Push
-					clickOption={{ add: addTodo, set: setInput, text: input }}
-					isEditing={editId !== null}
-				/>		
+			<Push
+				clickOption={{ add: addTodo, set: setInput, text: input }}
+				isEditing={editId !== null}
+			/>
 
-			<Box display="flex" alignItems="center" justifyContent="center" flexWrap="wrap" gap={3} mt={3}>
-				{
-					statuses.map((status) => (
-				<Box 
-					flexGrow={1}
-					key={status.title}
-				>
-					<Title title={status.title} />
-					<Box
-						height={300}
-						display="flex"
-						flexDirection="column"
-						alignItems="center"
-						sx={{ border: "2px solid #cacaca", overflow: "auto" }}
-						borderRadius={2}
-						p={2}
-					>
-						{todos.filter((todo) => status.bool === todo.bool).map((todo) => (
-							<TodoList
-								key={todo.id}
-								todo={todo}
-								clickOption={{
-									deleteTodo: deleteTodo,
-									editTodo: editTodo,
-									saveTodo: saveTodo,
-								}}
-								isEditing={editId === todo.id}
-								input={input}
-								setInput={setInput}
-								toggleSelected={() => {
-									if (todo.id) {
-										toggleSelected(todo.id);
-									}
-								}} // idがundefinedでないことを確認
-							/>
-						))}
+			<Box
+				display="flex"
+				alignItems="center"
+				justifyContent="center"
+				flexWrap="wrap"
+				gap={3}
+				mt={3}
+			>
+				{statuses.map((status) => (
+					<Box flexGrow={1} key={status.title}>
+						<Title title={status.title} />
+						<Box
+							height={300}
+							display="flex"
+							flexDirection="column"
+							alignItems="center"
+							sx={{ border: "2px solid #cacaca", overflow: "auto" }}
+							borderRadius={2}
+							p={2}
+						>
+							{todos
+								.filter((todo) => status.bool === todo.bool)
+								.map((todo) => (
+									<TodoList
+										key={todo.id}
+										todo={todo}
+										clickOption={{
+											deleteTodo: deleteTodo,
+											editTodo: editTodo,
+											saveTodo: saveTodo,
+										}}
+										isEditing={editId === todo.id}
+										input={input}
+										setInput={setInput}
+										toggleSelected={() => {
+											if (todo.id) {
+												toggleSelected(todo.id);
+											}
+										}} // idがundefinedでないことを確認
+									/>
+								))}
+						</Box>
 					</Box>
-				</Box>
-					))
-				}
+				))}
 			</Box>
 		</Container>
 	);

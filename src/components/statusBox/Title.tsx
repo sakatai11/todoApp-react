@@ -6,12 +6,13 @@ type Prop = {
 
 const Title = ({ title }: Prop) => {
 	return (
-		<Box 
-      component="p" 
-      sx={{
-        textAlign : "center",
-      }}>
-      {title}
+		<Box
+			component="p"
+			sx={{
+				textAlign: "center",
+			}}
+		>
+			{title}
 		</Box>
 	);
 };

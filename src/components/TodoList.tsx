@@ -1,9 +1,12 @@
 import { TodoListProps } from "../types/todo";
+import { useState } from "react";
+import Modal from "@mui/material/Modal";
 import Delete from "./Delete";
-import Edit from "./Edit";
+// import Edit from "./Edit";
 import { Box, TextField, Button } from "@mui/material";
 import ToggleButton from "@mui/material/ToggleButton";
 import CheckIcon from "@mui/icons-material/Check";
+// import EditModal from "./EdittModal";
 
 type TodoProps = {
 	todo: TodoListProps;
@@ -27,6 +30,11 @@ const TodoList = ({
 	toggleSelected,
 }: TodoProps) => {
 	const { deleteTodo, editTodo, saveTodo } = clickOption;
+	const [modalIsOpen, setModalIsOpen] = useState(false);
+
+	const handleClose = () => {
+		setModalIsOpen(false);
+	};
 
 	return (
 		<Box
@@ -54,49 +62,62 @@ const TodoList = ({
 			>
 				{todo.bool ? <CheckIcon /> : null}
 			</ToggleButton>
-			{isEditing ? (
-				<TextField
-					variant="outlined"
-					type="text"
-					value={input}
-					onChange={(e) => setInput(e.target.value)}
-				/>
-			) : (
-				<Box
-					component="span"
-					sx={{
-						display: "block",
-						whiteSpace: "nowrap",
-						overflow: "hidden",
-						textOverflow: "ellipsis",
-						paddingX: 1,
-						maxWidth: "100%",
-						"&:hover": {
-							overflowX: "auto",
-						},
-					}}
-				>
-					{todo.text}
-				</Box>
-			)}
+			<Box
+				component="span"
+				sx={{
+					display: "block",
+					whiteSpace: "nowrap",
+					overflow: "hidden",
+					textOverflow: "ellipsis",
+					paddingX: 1,
+					maxWidth: "100%",
+					"&:hover": {
+						overflowX: "auto",
+					},
+				}}
+			>
+				{todo.text}
+			</Box>
 			<Box display="flex" alignItems="center">
 				{!todo.bool ? (
-					isEditing ? (
-						<Button variant="outlined" onClick={saveTodo}>
-							保存
-						</Button>
-					) : (
-						<Edit
-							onEdit={() => {
+					<>
+						<Button
+							variant="outlined"
+							onClick={() => {
 								if (todo.id) {
+									setModalIsOpen(true);
 									editTodo(todo.id);
 								}
 							}}
-						/>
-					)
-				) : (
-					null
-				)}
+						>
+							編集
+						</Button>
+						{isEditing && (
+							<Modal
+								open={modalIsOpen}
+								onClose={handleClose}
+								aria-labelledby="modal-modal-title"
+								// aria-describedby="modal-modal-description"
+							>
+								<Box>
+									<TextField
+										id="modal-modal-title"
+										variant="outlined"
+										type="text"
+										value={input}
+										onChange={(e) => setInput(e.target.value)}
+									/>
+									<Button variant="contained" onClick={handleClose}>
+										CLOSE
+									</Button>
+									<Button variant="outlined" onClick={saveTodo}>
+										保存
+									</Button>
+								</Box>
+							</Modal>
+						)}
+					</>
+				) : null}
 				<Delete
 					onDelete={() => {
 						if (todo.id) {
