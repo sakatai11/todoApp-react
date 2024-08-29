@@ -2,11 +2,9 @@ import { TodoListProps } from "../types/todo";
 import { useState } from "react";
 import Modal from "@mui/material/Modal";
 import Delete from "./Delete";
-// import Edit from "./Edit";
 import { Box, TextField, Button } from "@mui/material";
 import ToggleButton from "@mui/material/ToggleButton";
 import CheckIcon from "@mui/icons-material/Check";
-// import EditModal from "./EdittModal";
 
 type TodoProps = {
 	todo: TodoListProps;
