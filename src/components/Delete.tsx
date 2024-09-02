@@ -1,4 +1,5 @@
 import { Button } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 type DeleteProp = {
 	onDelete: () => void;
@@ -7,13 +8,13 @@ type DeleteProp = {
 const Delete = ({ onDelete }: DeleteProp) => {
 	return (
 		<Button
-			variant="outlined"
+			// variant="outlined"
 			onClick={onDelete}
 			sx={{
 				marginLeft: 1,
 			}}
 		>
-			削除
+			<DeleteIcon />
 		</Button>
 	);
 };

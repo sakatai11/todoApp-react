@@ -1,3 +1,4 @@
+// todoデータの型
 export type TodoListProps = {
 	id?: string;
 	time: number;
@@ -5,4 +6,9 @@ export type TodoListProps = {
 	// status: string;
 	// value?: string;
 	bool: boolean;
+};
+
+// statusのプルダウンの型
+export type Status = {
+  category: string;
 };

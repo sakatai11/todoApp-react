@@ -1,10 +1,14 @@
 import { TodoListProps } from "../types/todo";
+import { statusesPull } from "../status/statuses";
 import { useState } from "react";
 import Modal from "@mui/material/Modal";
 import Delete from "./Delete";
+import StatusPullList from "./statusBox/StatusPullList";
 import { Box, TextField, Button } from "@mui/material";
 import ToggleButton from "@mui/material/ToggleButton";
 import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from '@mui/icons-material/Close';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
 type TodoProps = {
 	todo: TodoListProps;
@@ -80,7 +84,7 @@ const TodoList = ({
 				{!todo.bool ? (
 					<>
 						<Button
-							variant="outlined"
+							// variant="outlined"
 							onClick={() => {
 								if (todo.id) {
 									setModalIsOpen(true);
@@ -88,29 +92,67 @@ const TodoList = ({
 								}
 							}}
 						>
-							編集
+							<ModeEditIcon />
 						</Button>
 						{isEditing && (
+							// モーダル
 							<Modal
 								open={modalIsOpen}
 								onClose={handleClose}
-								aria-labelledby="modal-modal-title"
+								aria-labelledby="modal-modal-text"
 								// aria-describedby="modal-modal-description"
 							>
-								<Box>
-									<TextField
-										id="modal-modal-title"
-										variant="outlined"
-										type="text"
-										value={input}
-										onChange={(e) => setInput(e.target.value)}
-									/>
-									<Button variant="contained" onClick={handleClose}>
-										CLOSE
-									</Button>
-									<Button variant="outlined" onClick={saveTodo}>
-										保存
-									</Button>
+								<Box sx={{
+									position: 'absolute',
+									display : 'flex',
+									flexDirection: 'column',
+									justifyContent: 'center',
+									alignItems: 'center',
+									width: '100%',
+									height: '100%',
+									top: '50%',
+									left: '50%',
+									transform: 'translate(-50%, -50%)',
+								}}>
+									<Box sx={{
+										bgcolor: '#FFF',
+										maxWidth: 400,
+										width: '100%',
+										boxShadow: 24,
+										boxSizing: "border-box",
+										p: 4,
+										position: 'relative',
+									}}>
+										<TextField
+											id="modal-modal-text"
+											variant="outlined"
+											type="text"
+											fullWidth
+											value={input}
+											multiline
+											rows={9}
+											onChange={(e) => setInput(e.target.value)}
+										/>
+										<StatusPullList
+										// statusプルダウン
+											pullDownList={statusesPull}
+										/>
+											<CloseIcon 
+											// 閉じる
+												sx={{
+													position: 'absolute',
+													top: '-27px',
+													right: 0,
+													color: "#FFF",
+													cursor: 'pointer',
+												}} onClick={handleClose}
+											/>
+											<Box sx={{width: '100%', display: 'flex', justifyContent: 'center', marginTop: 3}}>
+												<Button variant="contained" sx={{display: 'block',}} onClick={saveTodo}>
+													保存
+												</Button>
+											</Box>
+									</Box>
 								</Box>
 							</Modal>
 						)}
