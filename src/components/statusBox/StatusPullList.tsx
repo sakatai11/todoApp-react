@@ -15,7 +15,7 @@ const StatusPullList = ({pullDownList}:PullDownType) => {
       options={pullDownList}
       getOptionLabel={(option) => option.category} 
       sx={{ width: '100%', marginTop: 3}}
-      onChange={(event, newValue) => {
+      onChange={(_, newValue) => { // _はeventの略
         if (newValue) {
           setLabel(newValue.category);
         } else if (newValue === null) {
