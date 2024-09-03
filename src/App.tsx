@@ -127,7 +127,15 @@ function App() {
 				mt={3}
 			>
 				{statuses.map((status) => (
-					<Box flexGrow={1} key={status.title}>
+					<Box 
+						key={status.title} 
+						sx={{
+						maxWidth: 520,
+						width: '100%',
+						'@media (max-width: 767px)': {
+							width: '100%',
+						},
+					}}>
 						<Title title={status.title} />
 						<Box
 							height={300}

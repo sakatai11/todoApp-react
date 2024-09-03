@@ -1,10 +1,10 @@
 export const statuses = [
 	{
-		title: "Todo",
+		title: "未着手",
 		bool: false,
 	},
 	{
-		title: "Completion",
+		title: "完了",
 		bool: true,
 	},
 ];

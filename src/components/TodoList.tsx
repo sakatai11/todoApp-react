@@ -72,10 +72,10 @@ const TodoList = ({
 					overflow: "hidden",
 					textOverflow: "ellipsis",
 					paddingX: 1,
-					maxWidth: "100%",
-					"&:hover": {
-						overflowX: "auto",
-					},
+					maxWidth: "50%",
+					// "&:hover": {
+					// 	overflowX: "auto",
+					// },
 				}}
 			>
 				{todo.text}
@@ -85,6 +85,10 @@ const TodoList = ({
 					<>
 						<Button
 							// variant="outlined"
+							sx={{ 
+								// p:0,
+								minWidth: 'auto'
+							}}
 							onClick={() => {
 								if (todo.id) {
 									setModalIsOpen(true);

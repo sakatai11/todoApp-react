@@ -12,6 +12,7 @@ const Delete = ({ onDelete }: DeleteProp) => {
 			onClick={onDelete}
 			sx={{
 				marginLeft: 1,
+				minWidth: 'auto'
 			}}
 		>
 			<DeleteIcon />
