@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Container, Box } from "@mui/material";
-import { TodoListProps } from "./types/todo";
+import { TodoListProps } from "./types/todos";
 import Push from "./components/Push";
 import TodoList from "./components/TodoList";
 import Title from "./components/statusBox/Title";
-import { statuses } from "./status/statuses";
+import { statusesTitle } from "./status/statuses";
 // firebase
 import { db } from "./utils/firebase";
 import {
@@ -20,7 +20,10 @@ import {
 
 function App() {
 	const [todos, setTodos] = useState<TodoListProps[]>([]);
-	const [input, setInput] = useState("");
+	const [input, setInput] = useState({
+		text: "",
+		status: "",
+	});
 	const [editId, setEditId] = useState<string | null>(null);
 
 	// 表示
@@ -31,6 +34,7 @@ function App() {
 			id: document.id,
 			time: document.data().time,
 			text: document.data().text,
+			status: document.data().status,
 			bool: document.data().bool,
 		}));
 		console.log(todosData);
@@ -41,7 +45,12 @@ function App() {
 	// todo追加
 	const addTodo = async () => {
 		if (input) {
-			const newTodo = { time: Date.now(), text: input, bool: false };
+			const newTodo = {
+				time: Date.now(),
+				text: input.text,
+				bool: false,
+				status: "未着手",
+			};
 			const docRef = await addDoc(collection(db, "todos"), newTodo);
 			setTodos((prevTodos) => {
 				const updatedTodos = [...prevTodos, { id: docRef.id, ...newTodo }];
@@ -51,7 +60,7 @@ function App() {
 					return boolComparison || timeComparison; // 両方の条件を実行
 				});
 			});
-			setInput("");
+			setInput({ text: "", status: "" });
 		} else {
 			return;
 		}
@@ -63,30 +72,21 @@ function App() {
 		setTodos(todos.filter((todo) => todo.id !== id)); // todo.id が id と一致しない todo だけを残す新しい配列を作成
 	};
 
-	// 編集
-	const editTodo = (id: string) => {
+	// テキスト編集
+	const textEditTodo = (id: string) => {
 		const todoToEdit = todos.find((todo) => todo.id === id); // todo.id が指定された id と一致するかどうかをチェック
 		if (todoToEdit) {
-			setInput(todoToEdit.text);
+			setInput({ ...input, text: todoToEdit.text });
 			setEditId(id);
 		}
 	};
 
-	// 保存
-	const saveTodo = async () => {
-		if (editId !== null) {
-			// trueの場合
-			const todoToUpdate = todos.find((todo) => todo.id === editId);
-			if (todoToUpdate) {
-				await updateDoc(doc(db, "todos", editId), { text: input });
-				setTodos(
-					todos.map((todo) =>
-						todo.id === editId ? { ...todo, text: input } : todo
-					)
-				);
-				setInput("");
-				setEditId(null);
-			}
+	// ステータスの変更
+	const statusEditTodo = (id: string) => {
+		const todoToEdit = todos.find((todo) => todo.id === id); // todo.id が指定された id と一致するかどうかをチェック
+		if (todoToEdit) {
+			setInput({ ...input, status: todoToEdit.status });
+			setEditId(id);
 		}
 	};
 
@@ -106,6 +106,29 @@ function App() {
 		}
 	};
 
+	// 保存
+	const saveTodo = async () => {
+		if (editId !== null) {
+			// trueの場合
+			const todoToUpdate = todos.find((todo) => todo.id === editId);
+			if (todoToUpdate) {
+				await updateDoc(doc(db, "todos", editId), {
+					text: input.text,
+					status: input.status,
+				});
+				setTodos(
+					todos.map((todo) =>
+						todo.id === editId
+							? { ...todo, text: input.text, status: input.status }
+							: todo
+					)
+				);
+				setInput({ text: "", status: "" });
+				setEditId(null);
+			}
+		}
+	};
+
 	// 初期処理
 	useEffect(() => {
 		fetchTodos();
@@ -114,7 +137,11 @@ function App() {
 	return (
 		<Container maxWidth="lg">
 			<Push
-				clickOption={{ add: addTodo, set: setInput, text: input }}
+				clickOption={{
+					add: addTodo,
+					set: (textInput) => setInput({ ...input, text: textInput }),
+					text: input.text,
+				}}
 				isEditing={editId !== null}
 			/>
 
@@ -126,16 +153,17 @@ function App() {
 				gap={3}
 				mt={3}
 			>
-				{statuses.map((status) => (
-					<Box 
-						key={status.title} 
+				{statusesTitle.map((status) => (
+					<Box
+						key={status.title}
 						sx={{
-						maxWidth: 520,
-						width: '100%',
-						'@media (max-width: 767px)': {
-							width: '100%',
-						},
-					}}>
+							maxWidth: 520,
+							width: "100%",
+							"@media (max-width: 767px)": {
+								width: "100%",
+							},
+						}}
+					>
 						<Title title={status.title} />
 						<Box
 							height={300}
@@ -154,7 +182,8 @@ function App() {
 										todo={todo}
 										clickOption={{
 											deleteTodo: deleteTodo,
-											editTodo: editTodo,
+											textEditTodo: textEditTodo,
+											statusEditTodo: statusEditTodo,
 											saveTodo: saveTodo,
 										}}
 										isEditing={editId === todo.id}

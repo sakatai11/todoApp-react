@@ -1,4 +1,4 @@
-export const statuses = [
+export const statusesTitle = [
 	{
 		title: "未着手",
 		bool: false,
@@ -20,5 +20,3 @@ export const statusesPull = [
 		category: "完了",
 	},
 ];
-
-
