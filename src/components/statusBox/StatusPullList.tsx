@@ -4,12 +4,14 @@ import { Status } from "../../types/todos";
 
 type PullDownType = {
 	pullDownList: Status[];
-	setInput: (status: string) => void; // setInputはstatusのみを受け取るように変更
+	input: { text: string; status: string };
+	setInput: (input: { status: string }) => void;
 };
 
-const StatusPullList = ({ pullDownList, setInput }: PullDownType) => {
-	const [label, setLabel] = useState("選択してください");
+const StatusPullList = ({ pullDownList, input, setInput }: PullDownType) => {
+	const [label, setLabel] = useState(input.status);
 
+	// console.log(setInput);
 	return (
 		<Autocomplete
 			disablePortal
@@ -19,10 +21,9 @@ const StatusPullList = ({ pullDownList, setInput }: PullDownType) => {
 			onChange={(_, newValue) => {
 				// _はeventの略
 				if (newValue) {
-					setInput(newValue.category);
+					setInput({ ...input, status: newValue.category });
 					setLabel(newValue.category);
-				} else if (newValue === null) {
-					setLabel("選択してください");
+					console.log(newValue.category);
 				}
 			}}
 			renderInput={(options) => <TextField {...options} label={label} />}

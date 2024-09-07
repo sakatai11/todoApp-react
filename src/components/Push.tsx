@@ -7,9 +7,10 @@ type InputProps = {
 		text: string;
 	};
 	isEditing: boolean;
+	error: boolean;
 };
 
-const Push = ({ clickOption, isEditing }: InputProps) => {
+const Push = ({ clickOption, isEditing, error }: InputProps) => {
 	const { add, set, text } = clickOption;
 
 	return (
@@ -26,8 +27,10 @@ const Push = ({ clickOption, isEditing }: InputProps) => {
 				<TextField
 					variant="outlined"
 					label="入力"
+					error={error}
 					type="text"
 					value={text}
+					helperText={error ? "内容を入力してください" : ""}
 					onChange={(e) => set(e.target.value)}
 				>
 					{text}

@@ -19,12 +19,16 @@ import {
 } from "firebase/firestore";
 
 function App() {
-	const [todos, setTodos] = useState<TodoListProps[]>([]);
+	const [todos, setTodos] = useState<TodoListProps[]>([]); // データ
 	const [input, setInput] = useState({
 		text: "",
 		status: "",
 	});
-	const [editId, setEditId] = useState<string | null>(null);
+	const [editId, setEditId] = useState<string | null>(null); // 編集したリストのID
+	const [error, setError] = useState({
+		pushArea: false,
+		modalArea: false,
+	});
 
 	// 表示
 	const fetchTodos = async () => {
@@ -38,13 +42,18 @@ function App() {
 			bool: document.data().bool,
 		}));
 		console.log(todosData);
-		setTodos(todosData as TodoListProps[]);
-		return todosData.sort((a, b) => Number(a.bool) - Number(b.bool)); // 降順にする
+		const sortedTodos = todosData.sort((a, b) => {
+			const boolComparison = Number(b.bool) - Number(a.bool);
+			const timeComparison = b.time - a.time;
+			return boolComparison || timeComparison; // 両方の条件を実行
+		});
+		setTodos(sortedTodos as TodoListProps[]);
+		return sortedTodos;
 	};
 
 	// todo追加
 	const addTodo = async () => {
-		if (input) {
+		if (input.text) {
 			const newTodo = {
 				time: Date.now(),
 				text: input.text,
@@ -55,13 +64,15 @@ function App() {
 			setTodos((prevTodos) => {
 				const updatedTodos = [...prevTodos, { id: docRef.id, ...newTodo }];
 				return updatedTodos.sort((a, b) => {
-					const boolComparison = Number(a.bool) - Number(b.bool);
+					const boolComparison = Number(b.bool) - Number(a.bool);
 					const timeComparison = b.time - a.time;
 					return boolComparison || timeComparison; // 両方の条件を実行
 				});
 			});
 			setInput({ text: "", status: "" });
+			setError({ ...error, pushArea: false }); // エラーをリセット
 		} else {
+			setError({ ...error, pushArea: true }); // エラー表示
 			return;
 		}
 	};
@@ -72,20 +83,11 @@ function App() {
 		setTodos(todos.filter((todo) => todo.id !== id)); // todo.id が id と一致しない todo だけを残す新しい配列を作成
 	};
 
-	// テキスト編集
-	const textEditTodo = (id: string) => {
+	// 編集（モーダル内）
+	const editTodo = (id: string) => {
 		const todoToEdit = todos.find((todo) => todo.id === id); // todo.id が指定された id と一致するかどうかをチェック
 		if (todoToEdit) {
-			setInput({ ...input, text: todoToEdit.text });
-			setEditId(id);
-		}
-	};
-
-	// ステータスの変更
-	const statusEditTodo = (id: string) => {
-		const todoToEdit = todos.find((todo) => todo.id === id); // todo.id が指定された id と一致するかどうかをチェック
-		if (todoToEdit) {
-			setInput({ ...input, status: todoToEdit.status });
+			setInput({ ...input, text: todoToEdit.text, status: todoToEdit.status });
 			setEditId(id);
 		}
 	};
@@ -97,8 +99,9 @@ function App() {
 			const updatedTodos = prevTodos.map((todo) =>
 				todo.id === id ? { ...todo, bool: !todo.bool } : todo
 			);
-			return updatedTodos.sort((a, b) => Number(a.bool) - Number(b.bool)); // 降順にする
+			return updatedTodos.sort((a, b) => Number(b.bool) - Number(a.bool));
 		});
+
 		// 更新するboolの値を取得
 		const todoToUpdate = todos.find((todo) => todo.id === id);
 		if (todoToUpdate) {
@@ -111,11 +114,12 @@ function App() {
 		if (editId !== null) {
 			// trueの場合
 			const todoToUpdate = todos.find((todo) => todo.id === editId);
-			if (todoToUpdate) {
+			if (todoToUpdate && input.text && input.status) {
 				await updateDoc(doc(db, "todos", editId), {
 					text: input.text,
 					status: input.status,
 				});
+				console.log(input);
 				setTodos(
 					todos.map((todo) =>
 						todo.id === editId
@@ -125,6 +129,10 @@ function App() {
 				);
 				setInput({ text: "", status: "" });
 				setEditId(null);
+				setError({ ...error, modalArea: false }); // エラーをリセット
+			} else {
+				setError({ ...error, modalArea: true }); // エラーを表示
+				return;
 			}
 		}
 	};
@@ -143,6 +151,7 @@ function App() {
 					text: input.text,
 				}}
 				isEditing={editId !== null}
+				error={error.pushArea}
 			/>
 
 			<Box
@@ -175,20 +184,23 @@ function App() {
 							p={2}
 						>
 							{todos
-								.filter((todo) => status.bool === todo.bool)
+								.filter((todo) => status.title === todo.status)
 								.map((todo) => (
 									<TodoList
 										key={todo.id}
 										todo={todo}
 										clickOption={{
 											deleteTodo: deleteTodo,
-											textEditTodo: textEditTodo,
-											statusEditTodo: statusEditTodo,
+											editTodo: editTodo,
 											saveTodo: saveTodo,
 										}}
 										isEditing={editId === todo.id}
 										input={input}
 										setInput={setInput}
+										error={error.modalArea}
+										setError={(modalError) =>
+											setError({ ...error, modalArea: modalError })
+										} // ラッパー関数を渡す
 										toggleSelected={() => {
 											if (todo.id) {
 												toggleSelected(todo.id);
