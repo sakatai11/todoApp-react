@@ -138,7 +138,7 @@ const TodoList = ({
 							<Box
 								sx={{
 									bgcolor: "#FFF",
-									maxWidth: 400,
+									maxWidth: 650,
 									width: "100%",
 									boxShadow: 24,
 									boxSizing: "border-box",
