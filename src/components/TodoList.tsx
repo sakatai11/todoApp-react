@@ -16,6 +16,7 @@ type TodoProps = {
 		deleteTodo: (id: string) => void;
 		editTodo: (id: string) => void;
 		saveTodo: () => void;
+		setEditId: (id: string | null) => void;
 	};
 	isEditing: boolean;
 	input: { text: string; status: string }; // inputをオブジェクト型に変更
@@ -35,16 +36,19 @@ const TodoList = ({
 	setError,
 	toggleSelected,
 }: TodoProps) => {
-	const { deleteTodo, editTodo, saveTodo } = clickOption;
+	const { deleteTodo, editTodo, saveTodo, setEditId } = clickOption;
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 
 	const handleClose = () => {
 		setModalIsOpen(false);
 		setError(false); //エラーのリセット
+		setEditId(null);
+		setInput({ text: "", status: "" }); // リセットする
 	};
 
 	// console.log(input.text);
 	// console.log(input.status);
+	console.log("TodoList:", modalIsOpen);
 
 	return (
 		<Box

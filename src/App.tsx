@@ -58,7 +58,7 @@ function App() {
 				time: Date.now(),
 				text: input.text,
 				bool: false,
-				status: "未着手",
+				status: input.status,
 			};
 			const docRef = await addDoc(collection(db, "todos"), newTodo);
 			setTodos((prevTodos) => {
@@ -147,11 +147,13 @@ function App() {
 			<Push
 				clickOption={{
 					add: addTodo,
-					set: (textInput) => setInput({ ...input, text: textInput }),
-					text: input.text,
+					set: (inputValue) => setInput(inputValue),
+					setEdit: setEditId,
+					inputValue: input,
 				}}
-				isEditing={editId !== null}
+				isEditing={editId !== null} // idがない場合はfalse
 				error={error.pushArea}
+				setError={(pushError) => setError({ ...error, pushArea: pushError })} // ラッパー関数を渡す
 			/>
 
 			<Box
@@ -193,6 +195,7 @@ function App() {
 											deleteTodo: deleteTodo,
 											editTodo: editTodo,
 											saveTodo: saveTodo,
+											setEditId: setEditId,
 										}}
 										isEditing={editId === todo.id}
 										input={input}
