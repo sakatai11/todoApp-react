@@ -194,7 +194,7 @@ const TodoList = ({
 									<Button
 										variant="contained"
 										sx={{ display: "block" }}
-										onClick={() => { 
+										onClick={() => {
 											saveTodo();
 											if (input.text && input.status) {
 												setModalIsOpen(false);

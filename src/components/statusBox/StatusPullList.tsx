@@ -9,7 +9,12 @@ type PullDownType = {
 	setInput: (input: { status: string }) => void;
 };
 
-const StatusPullList = ({ pullDownList, input, error, setInput }: PullDownType) => {
+const StatusPullList = ({
+	pullDownList,
+	input,
+	error,
+	setInput,
+}: PullDownType) => {
 	const [label, setLabel] = useState(input.status);
 
 	// console.log(setInput);
@@ -27,7 +32,16 @@ const StatusPullList = ({ pullDownList, input, error, setInput }: PullDownType) 
 					console.log(newValue.category);
 				}
 			}}
-			renderInput={(options) => <TextField {...options} label={label} error={!label && error} helperText={!input.status && error ? 'ステータスを選択してください' : null}  />}
+			renderInput={(options) => (
+				<TextField
+					{...options}
+					label={label}
+					error={!label && error}
+					helperText={
+						!input.status && error ? "ステータスを選択してください" : null
+					}
+				/>
+			)}
 		/>
 	);
 };

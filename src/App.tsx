@@ -153,7 +153,9 @@ function App() {
 				}}
 				isEditing={editId !== null} // idがない場合はfalse
 				error={error.listPushArea}
-				setError={(pushError) => setError({ ...error, listPushArea: pushError })} // ラッパー関数を渡す
+				setError={(pushError) =>
+					setError({ ...error, listPushArea: pushError })
+				} // ラッパー関数を渡す
 			/>
 
 			<Box
@@ -175,8 +177,7 @@ function App() {
 							},
 						}}
 					>
-						<Title title={status.category
-						} />
+						<Title title={status.category} />
 						<Box
 							height={300}
 							display="flex"
