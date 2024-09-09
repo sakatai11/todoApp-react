@@ -4,7 +4,6 @@ export type TodoListProps = {
 	time: number;
 	text: string;
 	status: string;
-	// value?: string;
 	bool: boolean;
 };
 

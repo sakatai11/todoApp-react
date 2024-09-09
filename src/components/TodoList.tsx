@@ -157,7 +157,7 @@ const TodoList = ({
 									fullWidth
 									value={input.text}
 									error={error}
-									helperText={error ? "内容を入力してください" : ""}
+									helperText={!input.text ? "内容を入力してください" : null}
 									multiline
 									rows={9}
 									onChange={(e) => setInput({ ...input, text: e.target.value })}
@@ -165,7 +165,8 @@ const TodoList = ({
 								<StatusPullList
 									// statusプルダウン
 									pullDownList={statusesPull}
-									input={input} // inputを渡す
+									input={{ ...input, status: input.status }} // input.statusを渡す
+									error={error}
 									setInput={(statusInput) =>
 										setInput({ ...input, status: statusInput.status })
 									}
@@ -193,7 +194,12 @@ const TodoList = ({
 									<Button
 										variant="contained"
 										sx={{ display: "block" }}
-										onClick={saveTodo}
+										onClick={() => { 
+											saveTodo();
+											if (input.text && input.status) {
+												setModalIsOpen(false);
+											}
+										}}
 									>
 										保存
 									</Button>

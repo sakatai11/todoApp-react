@@ -4,7 +4,7 @@ import { TodoListProps } from "./types/todos";
 import Push from "./components/Push";
 import TodoList from "./components/TodoList";
 import Title from "./components/statusBox/Title";
-import { statusesTitle } from "./status/statuses";
+import { statusesPull } from "./status/statuses";
 // firebase
 import { db } from "./utils/firebase";
 import {
@@ -26,8 +26,8 @@ function App() {
 	});
 	const [editId, setEditId] = useState<string | null>(null); // 編集したリストのID
 	const [error, setError] = useState({
-		pushArea: false,
-		modalArea: false,
+		listPushArea: false,
+		listModalArea: false,
 	});
 
 	// 表示
@@ -53,7 +53,7 @@ function App() {
 
 	// todo追加
 	const addTodo = async () => {
-		if (input.text) {
+		if (input.text && input.status) {
 			const newTodo = {
 				time: Date.now(),
 				text: input.text,
@@ -70,9 +70,9 @@ function App() {
 				});
 			});
 			setInput({ text: "", status: "" });
-			setError({ ...error, pushArea: false }); // エラーをリセット
+			setError({ ...error, listPushArea: false }); // エラーをリセット
 		} else {
-			setError({ ...error, pushArea: true }); // エラー表示
+			setError({ ...error, listPushArea: true }); // エラー表示
 			return;
 		}
 	};
@@ -129,9 +129,9 @@ function App() {
 				);
 				setInput({ text: "", status: "" });
 				setEditId(null);
-				setError({ ...error, modalArea: false }); // エラーをリセット
+				setError({ ...error, listModalArea: false }); // エラーをリセット
 			} else {
-				setError({ ...error, modalArea: true }); // エラーを表示
+				setError({ ...error, listModalArea: true }); // エラーを表示
 				return;
 			}
 		}
@@ -152,8 +152,8 @@ function App() {
 					inputValue: input,
 				}}
 				isEditing={editId !== null} // idがない場合はfalse
-				error={error.pushArea}
-				setError={(pushError) => setError({ ...error, pushArea: pushError })} // ラッパー関数を渡す
+				error={error.listPushArea}
+				setError={(pushError) => setError({ ...error, listPushArea: pushError })} // ラッパー関数を渡す
 			/>
 
 			<Box
@@ -164,9 +164,9 @@ function App() {
 				gap={3}
 				mt={3}
 			>
-				{statusesTitle.map((status) => (
+				{statusesPull.map((status) => (
 					<Box
-						key={status.title}
+						key={status.category}
 						sx={{
 							maxWidth: 520,
 							width: "100%",
@@ -175,7 +175,8 @@ function App() {
 							},
 						}}
 					>
-						<Title title={status.title} />
+						<Title title={status.category
+						} />
 						<Box
 							height={300}
 							display="flex"
@@ -186,7 +187,7 @@ function App() {
 							p={2}
 						>
 							{todos
-								.filter((todo) => status.title === todo.status)
+								.filter((todo) => status.category === todo.status)
 								.map((todo) => (
 									<TodoList
 										key={todo.id}
@@ -200,9 +201,9 @@ function App() {
 										isEditing={editId === todo.id}
 										input={input}
 										setInput={setInput}
-										error={error.modalArea}
+										error={error.listModalArea}
 										setError={(modalError) =>
-											setError({ ...error, modalArea: modalError })
+											setError({ ...error, listModalArea: modalError })
 										} // ラッパー関数を渡す
 										toggleSelected={() => {
 											if (todo.id) {

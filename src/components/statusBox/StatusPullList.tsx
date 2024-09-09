@@ -4,11 +4,12 @@ import { Status } from "../../types/todos";
 
 type PullDownType = {
 	pullDownList: Status[];
-	input: { text: string; status: string };
+	input: { status: string };
+	error: boolean;
 	setInput: (input: { status: string }) => void;
 };
 
-const StatusPullList = ({ pullDownList, input, setInput }: PullDownType) => {
+const StatusPullList = ({ pullDownList, input, error, setInput }: PullDownType) => {
 	const [label, setLabel] = useState(input.status);
 
 	// console.log(setInput);
@@ -26,7 +27,7 @@ const StatusPullList = ({ pullDownList, input, setInput }: PullDownType) => {
 					console.log(newValue.category);
 				}
 			}}
-			renderInput={(options) => <TextField {...options} label={label} />}
+			renderInput={(options) => <TextField {...options} label={label} error={!label && error} helperText={!input.status && error ? 'ステータスを選択してください' : null}  />}
 		/>
 	);
 };

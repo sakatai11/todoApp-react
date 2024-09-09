@@ -22,10 +22,10 @@ type InputProps = {
 
 const Push = ({ clickOption, isEditing, error, setError }: InputProps) => {
 	const { add, set, setEdit, inputValue } = clickOption;
-	const [modalPushIsOpen, setModalPushIsOpen] = useState(false);
+	const [modalIsOpen, setModalIsOpen] = useState(false);
 
 	const handleClose = () => {
-		setModalPushIsOpen(false);
+		setModalIsOpen(false);
 		setEdit(null);
 		setError(false); //エラーのリセット
 		set({ text: "", status: "" }); //リセットする
@@ -46,7 +46,7 @@ const Push = ({ clickOption, isEditing, error, setError }: InputProps) => {
 		>
 			{!isEditing && (
 				<Modal
-					open={modalPushIsOpen}
+					open={modalIsOpen}
 					onClose={handleClose}
 					aria-labelledby="modal-modal-text"
 					// aria-describedby="modal-modal-description"
@@ -83,7 +83,7 @@ const Push = ({ clickOption, isEditing, error, setError }: InputProps) => {
 								fullWidth
 								value={inputValue.text}
 								error={error}
-								helperText={error ? "内容を入力してください" : ""}
+								helperText={error ? "内容を入力してください" : null}
 								multiline
 								rows={9}
 								onChange={(e) => set({ ...inputValue, text: e.target.value })}
@@ -91,7 +91,8 @@ const Push = ({ clickOption, isEditing, error, setError }: InputProps) => {
 							<StatusPullList
 								// statusプルダウン
 								pullDownList={statusesPull}
-								input={inputValue} // inputを渡す
+								input={{ ...inputValue, status: inputValue.status }} // inputValue.statusを渡す
+								error={error}
 								setInput={(statusInput) =>
 									set({ ...inputValue, status: statusInput.status })
 								}
@@ -119,7 +120,12 @@ const Push = ({ clickOption, isEditing, error, setError }: InputProps) => {
 								<Button
 									variant="contained"
 									sx={{ display: "block" }}
-									onClick={add}
+									onClick={() => {
+										add();
+										if (inputValue.text && inputValue.status) {
+											setModalIsOpen(false);
+										}
+									}}
 								>
 									追加
 								</Button>
@@ -132,7 +138,7 @@ const Push = ({ clickOption, isEditing, error, setError }: InputProps) => {
 				variant="contained"
 				onClick={(e) => {
 					console.log(e);
-					setModalPushIsOpen(true);
+					setModalIsOpen(true);
 				}}
 			>
 				新規作成
