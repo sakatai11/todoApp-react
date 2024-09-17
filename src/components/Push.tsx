@@ -82,8 +82,8 @@ const Push = ({ clickOption, isEditing, error, setError }: InputProps) => {
 								type="text"
 								fullWidth
 								value={inputValue.text}
-								error={error}
-								helperText={error ? "内容を入力してください" : null}
+								error={inputValue.text ? undefined : error}
+								helperText={!inputValue.text && error ? "内容を入力してください" : null}
 								multiline
 								rows={9}
 								onChange={(e) => set({ ...inputValue, text: e.target.value })}

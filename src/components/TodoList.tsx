@@ -2,7 +2,7 @@ import { TodoListProps } from "../types/todos";
 import { statusesPull } from "../status/statuses";
 import { useState } from "react";
 import Modal from "@mui/material/Modal";
-import Delete from "./Delete";
+import DeleteModal from "./modal/DeleteModal";
 import StatusPullList from "./statusBox/StatusPullList";
 import { Box, TextField, Button } from "@mui/material";
 import ToggleButton from "@mui/material/ToggleButton";
@@ -156,8 +156,8 @@ const TodoList = ({
 									type="text"
 									fullWidth
 									value={input.text}
-									error={error}
-									helperText={!input.text ? "内容を入力してください" : null}
+									error={input.text ? undefined : error}
+									helperText={!input.text && error ? "内容を入力してください" : null}
 									multiline
 									rows={9}
 									onChange={(e) => setInput({ ...input, text: e.target.value })}
@@ -208,7 +208,7 @@ const TodoList = ({
 						</Box>
 					</Modal>
 				)}
-				<Delete
+				<DeleteModal
 					onDelete={() => {
 						if (todo.id) {
 							deleteTodo(todo.id);
