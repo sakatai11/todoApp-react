@@ -51,11 +51,20 @@ function App() {
 		return sortedTodos;
 	};
 
+	 // JSTのタイムスタンプ
+	const jstTime = () => {
+		// 現在のUTC時間を取得
+		const now = new Date();
+		// 日本標準時に変換
+		const jstinTime = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+		return jstinTime;
+	};
+
 	// todo追加
 	const addTodo = async () => {
 		if (input.text && input.status) {
 			const newTodo = {
-				time: Date.now(),
+				time: jstTime().getTime(), 
 				text: input.text,
 				bool: false,
 				status: input.status,
@@ -118,6 +127,7 @@ function App() {
 				await updateDoc(doc(db, "todos", editId), {
 					text: input.text,
 					status: input.status,
+					time: jstTime().getTime(),
 				});
 				console.log(input);
 				setTodos(

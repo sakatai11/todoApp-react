@@ -4,7 +4,7 @@ import { useState } from "react";
 import Modal from "@mui/material/Modal";
 import DeleteModal from "./modal/DeleteModal";
 import StatusPullList from "./statusBox/StatusPullList";
-import { Box, TextField, Button } from "@mui/material";
+import { Box, TextField, Button, Typography } from "@mui/material";
 import ToggleButton from "@mui/material/ToggleButton";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import CloseIcon from "@mui/icons-material/Close";
@@ -45,6 +45,14 @@ const TodoList = ({
 		setEditId(null);
 		setInput({ text: "", status: "" }); // リセットする
 	};
+
+  const jstFormattedDate = () => {
+    const date = new Date(todo.time); // タイムスタンプをDateオブジェクトに変換
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // 月は0から始まるので+1
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}年${month}月${day}日`;
+  };
 
 	// console.log(input.text);
 	// console.log(input.status);
@@ -123,7 +131,6 @@ const TodoList = ({
 						open={modalIsOpen}
 						onClose={handleClose}
 						aria-labelledby="modal-modal-text"
-						// aria-describedby="modal-modal-description"
 					>
 						<Box
 							sx={{
@@ -150,6 +157,9 @@ const TodoList = ({
 									position: "relative",
 								}}
 							>
+            		<Typography component="span" color="#9e9e9e" fontSize="12px" paddingBottom="8px" display='block' >
+									編集日時：{jstFormattedDate()}
+								</Typography>
 								<TextField
 									id="modal-modal-text"
 									variant="outlined"
