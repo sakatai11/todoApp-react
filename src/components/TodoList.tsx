@@ -153,7 +153,9 @@ const TodoList = ({
 									width: "100%",
 									boxShadow: 24,
 									boxSizing: "border-box",
-									p: 4,
+									px: 4,
+									pt: 2.5,
+									pb: 4,
 									position: "relative",
 								}}
 							>
