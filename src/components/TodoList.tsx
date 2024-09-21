@@ -5,6 +5,8 @@ import Modal from "@mui/material/Modal";
 import DeleteModal from "./modal/DeleteModal";
 import StatusPullList from "./statusBox/StatusPullList";
 import { Box, TextField, Button, Typography } from "@mui/material";
+import { jstFormattedDate } from "../utils/dateUtils";
+import { linkify } from "../utils/textUtils";
 import ToggleButton from "@mui/material/ToggleButton";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import CloseIcon from "@mui/icons-material/Close";
@@ -46,75 +48,113 @@ const TodoList = ({
 		setInput({ text: "", status: "" }); // リセットする
 	};
 
-  const jstFormattedDate = () => {
-    const date = new Date(todo.time); // タイムスタンプをDateオブジェクトに変換
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // 月は0から始まるので+1
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}年${month}月${day}日`;
-  };
-
-	// console.log(input.text);
-	// console.log(input.status);
-	console.log("TodoList:", modalIsOpen);
+	// URLを検出してリンクに変換する関数
+	const displayText = (text: string) => {
+		return linkify(text).map((part) => {
+			if (part.type === "link") {
+				return (
+					<a
+						key={part.index}
+						href={part.content}
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						{part.content}
+					</a>
+				);
+			} else {
+				return part.content;
+			}
+		});
+	};
 
 	return (
 		<Box
 			width={1}
 			boxSizing="border-box"
-			display="flex"
-			alignItems="center"
-			justifyContent="space-between"
+			// display="flex"
+			// alignItems="center"
+			// justifyContent="space-between"
 			sx={{
 				boxShadow: 3, // 影の強さを指定
-				padding: 2, // パディングを追加
+				padding: "16px 16px 10px 16px", // パディングを追加
 				marginBottom: 1, // マージンを追加
 				borderRadius: 1, // 角を丸くする
+				"@media (max-width: 767px)": {
+					padding: "10px 10px 3px 10px", // パディングを追加
+				},
 			}}
 		>
-			<ToggleButton
-				value="check"
-				selected={todo.bool}
-				onChange={toggleSelected}
-				sx={{
-					width: 20,
-					height: 20,
-					padding: 2,
-					backgroundColor: "#FFF",
-					"&.Mui-selected": {
-						backgroundColor: "#FFF", // 選択時のアウトラインを消す
-					},
-					border: "none", // アウトラインを消す
-				}}
-			>
-				{todo.bool ? (
-					<PushPinIcon />
-				) : (
-					<PushPinIcon sx={{ color: "rgba(0, 0, 0, 0.08)" }} />
-				)}
-			</ToggleButton>
 			<Box
-				component="span"
+				component="p"
 				sx={{
-					display: "block",
-					whiteSpace: "nowrap",
+					// whiteSpace: "nowrap",,
+					margin: 0,
 					overflow: "hidden",
 					textOverflow: "ellipsis",
-					paddingX: 1,
-					maxWidth: "50%",
+					"@media (max-width: 767px)": {
+						fontSize: "12px",
+					},
+					// maxWidth: "65%",
 					// "&:hover": {
 					// 	overflowX: "auto",
 					// },
 				}}
 			>
-				{todo.text}
+				{displayText(todo.text)}
 			</Box>
-			<Box display="flex" alignItems="center">
+			<Box display="flex" alignItems="center" justifyContent="end" pt={1}>
+				<ToggleButton
+					value="check"
+					selected={todo.bool}
+					onChange={toggleSelected}
+					sx={{
+						width: 20,
+						height: 20,
+						padding: 2,
+						"@media (max-width: 767px)": {
+							padding: 1,
+						},
+						backgroundColor: "#FFF",
+						"&.Mui-selected": {
+							backgroundColor: "#FFF", // 選択時のアウトラインを消す
+						},
+						border: "none", // アウトラインを消す
+					}}
+				>
+					{todo.bool ? (
+						<PushPinIcon
+							sx={{
+								width: 20,
+								height: 20,
+								"@media (max-width: 767px)": {
+									width: 15,
+									height: 15,
+								},
+							}}
+						/>
+					) : (
+						<PushPinIcon
+							sx={{
+								color: "rgba(0, 0, 0, 0.08)",
+								width: 20,
+								height: 20,
+								"@media (max-width: 767px)": {
+									width: 15,
+									height: 15,
+								},
+							}}
+						/>
+					)}
+				</ToggleButton>
 				<Button
 					// variant="outlined"
 					sx={{
 						// p:0,
 						minWidth: "auto",
+						"@media (max-width: 767px)": {
+							padding: 0.5,
+						},
 					}}
 					onClick={() => {
 						if (todo.id) {
@@ -123,7 +163,16 @@ const TodoList = ({
 						}
 					}}
 				>
-					<ModeEditIcon />
+					<ModeEditIcon
+						sx={{
+							width: 20,
+							height: 20,
+							"@media (max-width: 767px)": {
+								width: 15,
+								height: 15,
+							},
+						}}
+					/>
 				</Button>
 				{isEditing && (
 					// モーダル
@@ -159,8 +208,14 @@ const TodoList = ({
 									position: "relative",
 								}}
 							>
-            		<Typography component="span" color="#9e9e9e" fontSize="12px" paddingBottom="8px" display='block' >
-									編集日時：{jstFormattedDate()}
+								<Typography
+									component="span"
+									color="#9e9e9e"
+									fontSize="12px"
+									paddingBottom="8px"
+									display="block"
+								>
+									編集日時：{jstFormattedDate(todo.time)}
 								</Typography>
 								<TextField
 									id="modal-modal-text"
@@ -169,7 +224,9 @@ const TodoList = ({
 									fullWidth
 									value={input.text}
 									error={input.text ? undefined : error}
-									helperText={!input.text && error ? "内容を入力してください" : null}
+									helperText={
+										!input.text && error ? "内容を入力してください" : null
+									}
 									multiline
 									rows={9}
 									onChange={(e) => setInput({ ...input, text: e.target.value })}

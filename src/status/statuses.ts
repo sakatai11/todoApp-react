@@ -21,6 +21,9 @@ export const statusesPull = [
 		category: "進行中",
 	},
 	{
+		category: "保留",
+	},
+	{
 		category: "完了",
 	},
 ];

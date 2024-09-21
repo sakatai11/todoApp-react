@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { Container, Box } from "@mui/material";
+import { Box } from "@mui/material";
 import { TodoListProps } from "./types/todos";
 import Push from "./components/Push";
 import TodoList from "./components/TodoList";
 import Title from "./components/statusBox/Title";
 import { statusesPull } from "./status/statuses";
+import { jstTime } from "./utils/dateUtils";
 // firebase
 import { db } from "./utils/firebase";
 import {
@@ -51,20 +52,11 @@ function App() {
 		return sortedTodos;
 	};
 
-	 // JSTのタイムスタンプ
-	const jstTime = () => {
-		// 現在のUTC時間を取得
-		const now = new Date();
-		// 日本標準時に変換
-		const jstinTime = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-		return jstinTime;
-	};
-
 	// todo追加
 	const addTodo = async () => {
 		if (input.text && input.status) {
 			const newTodo = {
-				time: jstTime().getTime(), 
+				time: jstTime().getTime(),
 				text: input.text,
 				bool: false,
 				status: input.status,
@@ -153,7 +145,7 @@ function App() {
 	}, []);
 
 	return (
-		<Container maxWidth="lg">
+		<Box>
 			<Push
 				clickOption={{
 					add: addTodo,
@@ -170,31 +162,39 @@ function App() {
 
 			<Box
 				display="flex"
-				alignItems="center"
-				justifyContent="center"
-				flexWrap="wrap"
-				gap={3}
+				justifyContent="space-between"
+				// flexWrap='wrap'
 				mt={3}
+				px={3}
+				sx={{
+					"@media (max-width: 767px)": {
+						px: 0,
+						width: 1,
+						flexWrap: "wrap" /* 追加 */,
+					},
+				}}
 			>
 				{statusesPull.map((status) => (
 					<Box
 						key={status.category}
 						sx={{
-							maxWidth: 520,
-							width: "100%",
+							width: "25%",
 							"@media (max-width: 767px)": {
-								width: "100%",
+								width: "50%",
 							},
 						}}
 					>
 						<Title title={status.category} />
 						<Box
-							height={300}
 							display="flex"
 							flexDirection="column"
 							alignItems="center"
-							sx={{ border: "2px solid #cacaca", overflow: "auto" }}
-							borderRadius={2}
+							sx={{
+								overflow: "auto",
+								"@media (max-width: 767px)": {
+									p: 1.2,
+								},
+							}}
 							p={2}
 						>
 							{todos
@@ -227,7 +227,7 @@ function App() {
 					</Box>
 				))}
 			</Box>
-		</Container>
+		</Box>
 	);
 }
 
