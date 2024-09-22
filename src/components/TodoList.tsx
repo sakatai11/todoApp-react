@@ -50,20 +50,20 @@ const TodoList = ({
 
 	// URLを検出してリンクに変換する関数
 	const displayText = (text: string) => {
-		return linkify(text).map((part) => {
-			if (part.type === "link") {
+		return linkify(text).map(({ type, content, index }) => {
+			if (type === "link") {
 				return (
 					<a
-						key={part.index}
-						href={part.content}
+						key={index}
+						href={content}
 						target="_blank"
 						rel="noopener noreferrer"
 					>
-						{part.content}
+						{content}
 					</a>
 				);
 			} else {
-				return part.content;
+				return content;
 			}
 		});
 	};
