@@ -13,9 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: npm install
       - run: npm run build
+      - name: Add .nojekyll file
+        run: touch dist/.nojekyll
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TODO_VITE_F9D58 }}
           projectId: todo-vite-f9d58
+          target: dist
