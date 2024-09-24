@@ -1,5 +1,16 @@
 {
   "projects": {
     "default": "todo-vite-f9d58"
-  }
+  },
+  "targets": {
+    "todo-vite-f9d58": {
+      "hosting": {
+        "dist": [
+          "todo-vite-f9d58"
+        ]
+      }
+    }
+  },
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }
