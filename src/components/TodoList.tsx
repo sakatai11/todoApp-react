@@ -11,6 +11,7 @@ import ToggleButton from "@mui/material/ToggleButton";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import CloseIcon from "@mui/icons-material/Close";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import EditModal from "./modal/EditModal";
 
 type TodoProps = {
 	todo: TodoListProps;
