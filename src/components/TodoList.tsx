@@ -6,7 +6,7 @@ import { linkify } from "../utils/textUtils";
 import ToggleButton from "@mui/material/ToggleButton";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import EditModal from "./modal/EditModal";
+import Modal from "./modal/Modal";
 
 type TodoProps = {
 	todo: TodoListProps;
@@ -165,7 +165,7 @@ const TodoList = ({
 				</Button>
 				{isEditing && (
 					// モーダル
-					<EditModal
+					<Modal
 						todo={todo}
 						input={input}
 						error={error} 

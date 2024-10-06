@@ -148,10 +148,10 @@ function App() {
 		<Box>
 			<Push
 				clickOption={{
-					add: addTodo,
-					set: (inputValue) => setInput(inputValue),
-					setEdit: setEditId,
-					inputValue: input,
+					addTodo: addTodo,
+					setInput: (inputValue) => setInput(inputValue),
+					setEditId: setEditId,
+					input: input,
 				}}
 				isEditing={editId !== null} // idがない場合はfalse
 				error={error.listPushArea}

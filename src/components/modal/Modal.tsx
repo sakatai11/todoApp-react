@@ -6,8 +6,8 @@ import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
 import StatusPullList from "../statusBox/StatusPullList";
 
-type EditProp = {
-  todo: TodoListProps;
+type ModalProp = {
+  todo?: TodoListProps;
   input: { text: string; status: string }; // inputをオブジェクト型に変更
 	error: boolean;
   modalIsOpen: boolean;
@@ -15,10 +15,11 @@ type EditProp = {
   setEditId: (id: string | null) => void;
   setInput: (input: { text: string; status: string }) => void;
   setModalIsOpen: (modalIsOpen: boolean) => void; 
-  saveTodo: () => void;
+  saveTodo?: () => void;
+  addTodo?: () => void;
 };
 
-const EditModal = ({ todo, input, error, modalIsOpen, setError, setEditId, setInput, setModalIsOpen, saveTodo }: EditProp) => {
+const EditModal = ({ todo, input, error, modalIsOpen, setError, setEditId, setInput, setModalIsOpen, saveTodo, addTodo }: ModalProp) => {
 
   const handleClose = () => {
 		setModalIsOpen(false);
@@ -54,21 +55,25 @@ const EditModal = ({ todo, input, error, modalIsOpen, setError, setEditId, setIn
             width: "100%",
             boxShadow: 24,
             boxSizing: "border-box",
-            px: 4,
-            pt: 2.5,
-            pb: 4,
+            ...(addTodo
+              ? { p: 4 }
+              : { px: 4, pt: 2.5, pb: 4 }),
             position: "relative",
           }}
         >
-          <Typography
-            component="span"
-            color="#9e9e9e"
-            fontSize="12px"
-            paddingBottom="8px"
-            display="block"
-          >
-            編集日時：{jstFormattedDate(todo.time)}
-          </Typography>
+          {
+            todo?.time && (
+              <Typography
+                component="span"
+                color="#9e9e9e"
+                fontSize="12px"
+                paddingBottom="8px"
+                display="block"
+              >
+                編集日時：{jstFormattedDate(todo.time)}
+              </Typography>
+            )
+          }
           <TextField
             id="modal-modal-text"
             variant="outlined"
@@ -116,13 +121,18 @@ const EditModal = ({ todo, input, error, modalIsOpen, setError, setEditId, setIn
               variant="contained"
               sx={{ display: "block" }}
               onClick={() => {
-                saveTodo();
+                if (addTodo) {
+                  addTodo();
+                } else if (saveTodo) {
+                  saveTodo();
+                }
+
                 if (input.text && input.status) {
                   setModalIsOpen(false);
                 }
               }}
             >
-              保存
+              {addTodo ? '追加': '保存'}
             </Button>
           </Box>
         </Box>
