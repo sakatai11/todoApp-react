@@ -34,15 +34,23 @@ function App() {
 	// 表示
 	const fetchTodos = async () => {
 		const q = query(collection(db, "todos"), orderBy("time", "desc"));
+		const status = query(collection(db, "statuses"));
 		const querySnapshot = await getDocs(q);
-		const todosData = querySnapshot.docs.map((document) => ({
+		const statusSnapshot = await getDocs(status);
+		const todosData = querySnapshot.docs.map((document) => ({// オブジェクトにとして格納
 			id: document.id,
 			time: document.data().time,
 			text: document.data().text,
 			status: document.data().status,
 			bool: document.data().bool,
 		}));
+
+		const statusData = statusSnapshot.docs.map((document) =>({// オブジェクトにとして格納
+        id: document.id,
+        category: document.data().category
+		}));
 		console.log(todosData);
+		console.log(statusData);
 		const sortedTodos = todosData.sort((a, b) => {
 			const boolComparison = Number(b.bool) - Number(a.bool);
 			const timeComparison = b.time - a.time;
