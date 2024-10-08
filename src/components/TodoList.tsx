@@ -3,6 +3,7 @@ import { useState } from "react";
 import DeleteModal from "./modal/DeleteModal";
 import { Box, Button } from "@mui/material";
 import { linkify } from "../utils/textUtils";
+import { Status } from "../types/todos";
 import ToggleButton from "@mui/material/ToggleButton";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
@@ -16,6 +17,7 @@ type TodoProps = {
 		saveTodo: () => void;
 		setEditId: (id: string | null) => void;
 	};
+	statusPull: Status[];
 	isEditing: boolean;
 	input: { text: string; status: string }; // inputをオブジェクト型に変更
 	setInput: (input: { text: string; status: string }) => void; // setInputもオブジェクトを受け取るように変更
@@ -27,6 +29,7 @@ type TodoProps = {
 const TodoList = ({
 	todo,
 	clickOption,
+	statusPull,
 	isEditing,
 	input,
 	setInput,
@@ -168,8 +171,9 @@ const TodoList = ({
 					<Modal
 						todo={todo}
 						input={input}
-						error={error} 
+						error={error}
 						modalIsOpen={modalIsOpen}
+						statusPull={statusPull}
 						setError={setError}
 						setEditId={setEditId}
 						setInput={setInput}

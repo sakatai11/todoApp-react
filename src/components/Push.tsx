@@ -1,5 +1,6 @@
 import { Button, Box } from "@mui/material";
 import { useState } from "react";
+import { Status } from "../types/todos";
 import Modal from "./modal/Modal";
 
 type InputProps = {
@@ -12,12 +13,19 @@ type InputProps = {
 			status: string;
 		};
 	};
+	statusPull: Status[];
 	isEditing: boolean;
 	error: boolean;
 	setError: (error: boolean) => void;
 };
 
-const Push = ({ clickOption, isEditing, error, setError }: InputProps) => {
+const Push = ({
+	clickOption,
+	statusPull,
+	isEditing,
+	error,
+	setError,
+}: InputProps) => {
 	const { addTodo, setInput, setEditId, input } = clickOption;
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -35,10 +43,11 @@ const Push = ({ clickOption, isEditing, error, setError }: InputProps) => {
 			}}
 		>
 			{!isEditing && (
-				<Modal 
+				<Modal
 					input={input}
-					error={error} 
+					error={error}
 					modalIsOpen={modalIsOpen}
+					statusPull={statusPull}
 					setError={setError}
 					setEditId={setEditId}
 					setInput={setInput}

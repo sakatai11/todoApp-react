@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 import { TodoListProps } from "./types/todos";
+import { StatusProps } from "./types/status";
 import Push from "./components/Push";
 import TodoList from "./components/TodoList";
 import Title from "./components/statusBox/Title";
-import { statusesPull } from "./status/statuses";
+// import { statusesPull } from "./status/statuses";
 import { jstTime } from "./utils/dateUtils";
 // firebase
 import { db } from "./utils/firebase";
@@ -20,7 +22,8 @@ import {
 } from "firebase/firestore";
 
 function App() {
-	const [todos, setTodos] = useState<TodoListProps[]>([]); // データ
+	const [todos, setTodos] = useState<TodoListProps[]>([]); // todoデータ
+	const [status, setStatuse] = useState<StatusProps[]>([]); // statusデータ
 	const [input, setInput] = useState({
 		text: "",
 		status: "",
@@ -34,10 +37,11 @@ function App() {
 	// 表示
 	const fetchTodos = async () => {
 		const q = query(collection(db, "todos"), orderBy("time", "desc"));
-		const status = query(collection(db, "statuses"));
-		const querySnapshot = await getDocs(q);
-		const statusSnapshot = await getDocs(status);
-		const todosData = querySnapshot.docs.map((document) => ({// オブジェクトにとして格納
+		const qStatus = query(collection(db, "statuses"));
+		const todoSnapshot = await getDocs(q);
+		const statusSnapshot = await getDocs(qStatus);
+		const todosData = todoSnapshot.docs.map((document) => ({
+			// オブジェクトにとして格納
 			id: document.id,
 			time: document.data().time,
 			text: document.data().text,
@@ -45,9 +49,10 @@ function App() {
 			bool: document.data().bool,
 		}));
 
-		const statusData = statusSnapshot.docs.map((document) =>({// オブジェクトにとして格納
-        id: document.id,
-        category: document.data().category
+		const statusData = statusSnapshot.docs.map((document) => ({
+			// オブジェクトにとして格納
+			id: document.id,
+			category: document.data().category,
 		}));
 		console.log(todosData);
 		console.log(statusData);
@@ -57,6 +62,7 @@ function App() {
 			return boolComparison || timeComparison; // 両方の条件を実行
 		});
 		setTodos(sortedTodos as TodoListProps[]);
+		setStatuse(statusData as StatusProps[]);
 		return sortedTodos;
 	};
 
@@ -161,6 +167,7 @@ function App() {
 					setEditId: setEditId,
 					input: input,
 				}}
+				statusPull={status}
 				isEditing={editId !== null} // idがない場合はfalse
 				error={error.listPushArea}
 				setError={(pushError) =>
@@ -169,71 +176,104 @@ function App() {
 			/>
 
 			<Box
-				display="flex"
-				justifyContent="space-between"
-				// flexWrap='wrap'
-				mt={3}
-				px={3}
 				sx={{
+					maxWidth: "1660px",
+					width: "100%",
+					margin: "0 auto",
+					overflowX: "auto",
 					"@media (max-width: 767px)": {
-						px: 0,
 						width: 1,
-						flexWrap: "wrap" /* 追加 */,
 					},
 				}}
 			>
-				{statusesPull.map((status) => (
+				<Box
+					display="flex"
+					justifyContent="space-between"
+					// flexWrap='wrap'
+					mt={3}
+					px={3}
+					sx={{
+						"@media (max-width: 767px)": {
+							px: 0,
+							width: 1,
+							flexWrap: "wrap" /* 追加 */,
+						},
+					}}
+				>
+					{status.map((statusPull) => (
+						<Box
+							key={statusPull.id}
+							sx={{
+								minWidth: "320px",
+								"@media (max-width: 767px)": {
+									width: "50%",
+									minWidth: "auto",
+								},
+							}}
+						>
+							<Title title={statusPull.category} />
+							<Box
+								display="flex"
+								flexDirection="column"
+								alignItems="center"
+								sx={{
+									overflow: "auto",
+									"@media (max-width: 767px)": {
+										p: 1.2,
+									},
+								}}
+								p={2}
+							>
+								{todos
+									.filter((todo) => statusPull.category === todo.status)
+									.map((todo) => (
+										<TodoList
+											key={todo.id}
+											todo={todo}
+											clickOption={{
+												deleteTodo: deleteTodo,
+												editTodo: editTodo,
+												saveTodo: saveTodo,
+												setEditId: setEditId,
+											}}
+											statusPull={status}
+											isEditing={editId === todo.id}
+											input={input}
+											setInput={setInput}
+											error={error.listModalArea}
+											setError={(modalError) =>
+												setError({ ...error, listModalArea: modalError })
+											} // ラッパー関数を渡す
+											toggleSelected={() => {
+												if (todo.id) {
+													toggleSelected(todo.id);
+												}
+											}} // idがundefinedでないことを確認
+										/>
+									))}
+							</Box>
+						</Box>
+					))}
 					<Box
-						key={status.category}
 						sx={{
-							width: "25%",
+							minWidth: "320px",
+							paddingX: "16px",
+							boxSizing: "border-box",
 							"@media (max-width: 767px)": {
-								width: "50%",
+								width: "100%",
+								minWidth: "auto",
 							},
 						}}
 					>
-						<Title title={status.category} />
-						<Box
-							display="flex"
-							flexDirection="column"
-							alignItems="center"
-							sx={{
-								overflow: "auto",
-								"@media (max-width: 767px)": {
-									p: 1.2,
-								},
-							}}
-							p={2}
+						<Button
+							variant="outlined"
+							fullWidth
+							endIcon={<AddBoxIcon color="primary" />}
 						>
-							{todos
-								.filter((todo) => status.category === todo.status)
-								.map((todo) => (
-									<TodoList
-										key={todo.id}
-										todo={todo}
-										clickOption={{
-											deleteTodo: deleteTodo,
-											editTodo: editTodo,
-											saveTodo: saveTodo,
-											setEditId: setEditId,
-										}}
-										isEditing={editId === todo.id}
-										input={input}
-										setInput={setInput}
-										error={error.listModalArea}
-										setError={(modalError) =>
-											setError({ ...error, listModalArea: modalError })
-										} // ラッパー関数を渡す
-										toggleSelected={() => {
-											if (todo.id) {
-												toggleSelected(todo.id);
-											}
-										}} // idがundefinedでないことを確認
-									/>
-								))}
-						</Box>
+							リストを追加する
+						</Button>
 					</Box>
-				))}
+				</Box>
 			</Box>
 		</Box>
 	);
