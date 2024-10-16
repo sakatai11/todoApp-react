@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { Box, Button } from "@mui/material";
-import AddBoxIcon from "@mui/icons-material/AddBox";
+import { Box } from "@mui/material";
 import { TodoListProps } from "./types/todos";
 import { StatusProps } from "./types/status";
 import Push from "./components/Push";
 import TodoList from "./components/TodoList";
 import Title from "./components/statusBox/Title";
+import ListAdd from "./components/ListAdd";
 // import { statusesPull } from "./status/statuses";
 import { jstTime } from "./utils/dateUtils";
 // firebase
@@ -265,13 +265,7 @@ function App() {
 							},
 						}}
 					>
-						<Button
-							variant="outlined"
-							fullWidth
-							endIcon={<AddBoxIcon color="primary" />}
-						>
-							リストを追加する
-						</Button>
+						<ListAdd />
 					</Box>
 				</Box>
 			</Box>
