@@ -2,7 +2,15 @@ import { useState } from "react";
 import { Button, TextField, Box } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 
-const ListAdd = () => {
+type ListAddProps = {
+  status: string;
+  error: boolean;
+  addList: () => void;
+  setInput: (status: string) => void;
+  setError:  (error: boolean) => void;
+}
+
+const ListAdd = ({status, error, addList, setInput, setError}: ListAddProps) => {
 	const [addBtn, setAddBtn] = useState(false);
 
 	return (
@@ -18,8 +26,11 @@ const ListAdd = () => {
 							marginBottom: "10px",
 							width: "100%",
 						}}
+            value={status}
+						error={!status ? error : undefined }
+						helperText={!status && error ? "リストを入力してください" : null}
+            onChange={(e) => setInput(e.target.value)}
 					/>
-
 					<Box
 						sx={{
 							display: "flex",
@@ -27,7 +38,16 @@ const ListAdd = () => {
 							gap: "12px",
 						}}
 					>
-						<Button variant="outlined" fullWidth>
+						<Button 
+              variant="outlined" 
+              fullWidth
+              onClick={() => {
+                addList();
+                if (status) {
+                  setAddBtn(false);
+                } 
+              }}
+            >
 							追加する
 						</Button>
 						<Button
@@ -48,7 +68,10 @@ const ListAdd = () => {
 					variant="outlined"
 					fullWidth
 					endIcon={<AddBoxIcon color="primary" />}
-					onClick={() => setAddBtn(true)}
+					onClick={() => {
+            setAddBtn(true);
+            setError(false);
+          }}
 				>
 					リストを追加する
 				</Button>

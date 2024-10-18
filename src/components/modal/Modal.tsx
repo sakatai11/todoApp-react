@@ -88,7 +88,7 @@ const EditModal = ({
 						type="text"
 						fullWidth
 						value={input.text}
-						error={input.text ? undefined : error}
+						error={!input.text ? error : undefined}
 						helperText={!input.text && error ? "内容を入力してください" : null}
 						multiline
 						rows={9}

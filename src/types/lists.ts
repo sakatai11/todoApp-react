@@ -1,6 +1,6 @@
 // todoデータの型
-export type StatusProps = {
+export type StatusListProps = {
 	id: string;
 	category: string;
-	time?: number;
+	number: number;
 };

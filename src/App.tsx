@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import { TodoListProps } from "./types/todos";
-import { StatusProps } from "./types/status";
+import { StatusListProps } from "./types/lists";
 import Push from "./components/Push";
 import TodoList from "./components/TodoList";
 import Title from "./components/statusBox/Title";
@@ -23,7 +23,7 @@ import {
 
 function App() {
 	const [todos, setTodos] = useState<TodoListProps[]>([]); // todoデータ
-	const [status, setStatuse] = useState<StatusProps[]>([]); // statusデータ
+	const [lists, setLists] = useState<StatusListProps[]>([]); // listデータ
 	const [input, setInput] = useState({
 		text: "",
 		status: "",
@@ -32,14 +32,15 @@ function App() {
 	const [error, setError] = useState({
 		listPushArea: false,
 		listModalArea: false,
+		addListArea: false,
 	});
 
 	// 表示
 	const fetchTodos = async () => {
-		const q = query(collection(db, "todos"), orderBy("time", "desc"));
-		const qStatus = query(collection(db, "statuses"));
-		const todoSnapshot = await getDocs(q);
-		const statusSnapshot = await getDocs(qStatus);
+		const qTodos = query(collection(db, "todos"), orderBy("time", "desc")); // 降順
+		const qLists = query(collection(db, "lists"), orderBy("number", "asc")); // 昇順
+		const todoSnapshot = await getDocs(qTodos);
+		const listSnapshot = await getDocs(qLists);
 		const todosData = todoSnapshot.docs.map((document) => ({
 			// オブジェクトにとして格納
 			id: document.id,
@@ -49,20 +50,21 @@ function App() {
 			bool: document.data().bool,
 		}));
 
-		const statusData = statusSnapshot.docs.map((document) => ({
-			// オブジェクトにとして格納
-			id: document.id,
-			category: document.data().category,
-		}));
 		console.log(todosData);
-		console.log(statusData);
 		const sortedTodos = todosData.sort((a, b) => {
 			const boolComparison = Number(b.bool) - Number(a.bool);
 			const timeComparison = b.time - a.time;
 			return boolComparison || timeComparison; // 両方の条件を実行
 		});
+		const listsData = listSnapshot.docs.map((document) => ({
+			// オブジェクトにとして格納
+			id: document.id,
+			category: document.data().category,
+			number: document.data().number,
+		}));
+		console.log(listsData);
 		setTodos(sortedTodos as TodoListProps[]);
-		setStatuse(statusData as StatusProps[]);
+		setLists(listsData as StatusListProps[]);
 		return sortedTodos;
 	};
 
@@ -91,6 +93,28 @@ function App() {
 			return;
 		}
 	};
+
+		// list追加
+		const addList = async () => {
+			if (input.status) {
+				const newList = {
+					category: input.status,
+					number: lists.length + 1
+				};
+				const docRef = await addDoc(collection(db, "lists"), newList);
+				setLists((prevLists) => {
+					const updatedLists = [...prevLists, { id: docRef.id, ...newList }];
+					return updatedLists.sort((a, b) => {
+						const numberComparison = a.number - b.number;
+						return numberComparison; // 条件を実行
+					});
+				});
+				setError({ ...error, addListArea: false }); // エラーをリセット
+			} else {
+				setError({ ...error, addListArea: true }); // エラー表示
+				return;
+			}
+		};
 
 	// 削除
 	const deleteTodo = async (id: string) => {
@@ -167,7 +191,7 @@ function App() {
 					setEditId: setEditId,
 					input: input,
 				}}
-				statusPull={status}
+				statusPull={lists}
 				isEditing={editId !== null} // idがない場合はfalse
 				error={error.listPushArea}
 				setError={(pushError) =>
@@ -200,7 +224,7 @@ function App() {
 						},
 					}}
 				>
-					{status.map((statusPull) => (
+					{lists.map((statusPull) => (
 						<Box
 							key={statusPull.id}
 							sx={{
@@ -236,7 +260,7 @@ function App() {
 												saveTodo: saveTodo,
 												setEditId: setEditId,
 											}}
-											statusPull={status}
+											statusPull={lists}
 											isEditing={editId === todo.id}
 											input={input}
 											setInput={setInput}
@@ -265,12 +289,17 @@ function App() {
 							},
 						}}
 					>
-						<ListAdd />
+						<ListAdd 
+							status={input.status}
+							error={error.addListArea}
+							addList={addList}
+							setInput={(listStatus) => setInput({...input, status: listStatus})}
+							setError={(listTextError) => setError({...error, addListArea: listTextError })} 
+						/> 
 					</Box>
 				</Box>
 			</Box>
 		</Box>
 	);
 }
-
 export default App;
