@@ -101,9 +101,10 @@ function App() {
 					category: input.status,
 					number: lists.length + 1
 				};
+				console.log(newList.number);
 				const docRef = await addDoc(collection(db, "lists"), newList);
 				setLists((prevLists) => {
-					const updatedLists = [...prevLists, { id: docRef.id, ...newList }];
+					const updatedLists = [...prevLists, { id: docRef.id, ...newList }]; // 新しく配列要素を追加
 					return updatedLists.sort((a, b) => {
 						const numberComparison = a.number - b.number;
 						return numberComparison; // 条件を実行
