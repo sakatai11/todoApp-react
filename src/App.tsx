@@ -117,11 +117,18 @@ function App() {
 			}
 		};
 
-	// 削除
+	// todo削除
 	const deleteTodo = async (id: string) => {
 		await deleteDoc(doc(db, "todos", id.toString())); // idをstring型に変換
 		setTodos(todos.filter((todo) => todo.id !== id)); // todo.id が id と一致しない todo だけを残す新しい配列を作成
 	};
+
+
+	// list削除
+	// const deleteList = async (id: string) => {
+	// 	await deleteDoc(doc(db, "todos", id.toString())); // idをstring型に変換
+	// 	setTodos(todos.filter((todo) => todo.id !== id)); // todo.id が id と一致しない todo だけを残す新しい配列を作成
+	// };
 
 	// 編集（モーダル内）
 	const editTodo = (id: string) => {

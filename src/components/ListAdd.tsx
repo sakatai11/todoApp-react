@@ -14,7 +14,11 @@ const ListAdd = ({status, error, addList, setInput, setError}: ListAddProps) => 
 	const [addBtn, setAddBtn] = useState(false);
 
 	return (
-		<>
+		<Box
+      sx={{
+        mt:1
+      }}
+    >
 			{addBtn ? (
 				<>
 					<TextField
@@ -76,7 +80,7 @@ const ListAdd = ({status, error, addList, setInput, setError}: ListAddProps) => 
 					リストを追加する
 				</Button>
 			)}
-		</>
+		</Box>
 	);
 };
 
