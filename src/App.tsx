@@ -123,12 +123,11 @@ function App() {
 		setTodos(todos.filter((todo) => todo.id !== id)); // todo.id が id と一致しない todo だけを残す新しい配列を作成
 	};
 
-
 	// list削除
-	// const deleteList = async (id: string) => {
-	// 	await deleteDoc(doc(db, "todos", id.toString())); // idをstring型に変換
-	// 	setTodos(todos.filter((todo) => todo.id !== id)); // todo.id が id と一致しない todo だけを残す新しい配列を作成
-	// };
+	const deleteList = async (id: string) => {
+		await deleteDoc(doc(db, "lists", id.toString())); // idをstring型に変換
+		setLists(lists.filter((list) => list.id !== id)); // todo.id が id と一致しない todo だけを残す新しい配列を作成
+	};
 
 	// 編集（モーダル内）
 	const editTodo = (id: string) => {
@@ -243,7 +242,10 @@ function App() {
 								},
 							}}
 						>
-							<Title title={statusPull.category} />
+							<Title 
+								title={statusPull.category}
+								id={statusPull.id}
+								deleteList={() => deleteList} />
 							<Box
 								display="flex"
 								flexDirection="column"

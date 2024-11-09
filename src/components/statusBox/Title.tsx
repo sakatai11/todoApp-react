@@ -5,17 +5,22 @@ import { useState, useEffect, useRef } from "react";
 
 type Prop = {
 	title: string;
+	id: string;
+	deleteList: (id: string) => void
 };
 
-const Title = ({ title }: Prop) => {
-	const [modal, setModal] = useState(false);
+const Title = ({ title, id, deleteList }: Prop) => {
+	const [modalIsOpen, setModalIsOpen] = useState({
+		order: false,
+		list: false,
+	});
 	const modalRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 				// クリックイベントがモーダル外で発生した場合
 					if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-							setModal(false);
+						setModalIsOpen({...modalIsOpen, order:false, list: false});
 					}
 			};
 			// 画面をクリックした際に handleClickOutside 関数を実行
@@ -28,7 +33,7 @@ const Title = ({ title }: Prop) => {
 
 	return (
 		<Box
-			component="p"
+			component="div"
 			sx={{
 				textAlign: "center",
 				position: "relative",
@@ -36,7 +41,7 @@ const Title = ({ title }: Prop) => {
 		>
 			{title}
 			<IconButton
-				onClick={() => setModal(true)}
+				onClick={() => setModalIsOpen({...modalIsOpen, order:true, list: true})}
 				sx={{
 					position: "absolute",
 					top: 0,
@@ -47,10 +52,13 @@ const Title = ({ title }: Prop) => {
 				<MoreVertIcon />
 			</IconButton>
 			{
-				modal && (
+				(modalIsOpen.order && modalIsOpen.list) && (
 					<div ref={modalRef}>
 						<SelectListModal 
-							setModal={() => setModal(false)}
+							id={id}
+							modalIsOpen={modalIsOpen}
+							setModalIsOpen={() => setModalIsOpen({...modalIsOpen})}
+							deleteList={() => deleteList}
 						/>
 					</div>
 				)

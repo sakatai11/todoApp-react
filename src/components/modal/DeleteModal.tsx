@@ -1,40 +1,18 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { Button, Box, Typography } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 type DeleteProp = {
+	modalIsOpen: boolean;
 	onDelete: () => void;
+	setModalIsOpen: (modalIsOpen: boolean) => void
 };
 
-const DeleteModal = ({ onDelete }: DeleteProp) => {
-	const [modalIsOpen, setModalIsOpen] = useState(false);
+const DeleteModal = ({ modalIsOpen, onDelete, setModalIsOpen }: DeleteProp) => {
 
 	return (
 		<>
-			<Button
-				// variant="outlined"
-				onClick={() => setModalIsOpen(true)}
-				sx={{
-					minWidth: "auto",
-					"@media (max-width: 767px)": {
-						padding: 0.5,
-					},
-				}}
-			>
-				<DeleteIcon
-					sx={{
-						width: 20,
-						height: 20,
-						"@media (max-width: 767px)": {
-							width: 15,
-							height: 15,
-						},
-					}}
-				/>
-			</Button>
-
 			<Modal //モーダル
 				open={modalIsOpen}
 				onClose={() => setModalIsOpen(false)}

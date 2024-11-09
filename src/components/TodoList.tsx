@@ -7,6 +7,7 @@ import { Status } from "../types/todos";
 import ToggleButton from "@mui/material/ToggleButton";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Modal from "./modal/Modal";
 
 type TodoProps = {
@@ -38,7 +39,10 @@ const TodoList = ({
 	toggleSelected,
 }: TodoProps) => {
 	const { deleteTodo, editTodo, saveTodo, setEditId } = clickOption;
-	const [modalIsOpen, setModalIsOpen] = useState(false);
+	const [modalIsOpen, setModalIsOpen] = useState({
+		edit: false,
+		delete: false,
+	});
 
 	// URLを検出してリンクに変換する関数
 	const displayText = (text: string) => {
@@ -150,7 +154,7 @@ const TodoList = ({
 					}}
 					onClick={() => {
 						if (todo.id) {
-							setModalIsOpen(true);
+							setModalIsOpen({...modalIsOpen, edit: true});
 							editTodo(todo.id);
 						}
 					}}
@@ -172,22 +176,57 @@ const TodoList = ({
 						todo={todo}
 						input={input}
 						error={error}
-						modalIsOpen={modalIsOpen}
+						modalIsOpen={modalIsOpen.edit}
 						statusPull={statusPull}
 						setError={setError}
 						setEditId={setEditId}
 						setInput={setInput}
-						setModalIsOpen={setModalIsOpen}
+						setModalIsOpen={(editModal) => setModalIsOpen({...modalIsOpen, edit:editModal})}
 						saveTodo={saveTodo}
 					/>
 				)}
-				<DeleteModal
+				{/* <DeleteModal
 					onDelete={() => {
 						if (todo.id) {
 							deleteTodo(todo.id);
 						}
 					}}
+				/> */}
+			<Button
+				// variant="outlined"
+				onClick={() => setModalIsOpen({...modalIsOpen, delete: true})}
+				sx={{
+					minWidth: "auto",
+					"@media (max-width: 767px)": {
+						padding: 0.5,
+					},
+				}}
+			>
+				<DeleteIcon
+					sx={{
+						width: 20,
+						height: 20,
+						"@media (max-width: 767px)": {
+							width: 15,
+							height: 15,
+						},
+					}}
 				/>
+			</Button>
+				
+				{
+					modalIsOpen.delete && (
+						<DeleteModal
+							onDelete={() => {
+								if (todo.id) {
+									deleteTodo(todo.id);
+								}
+							}}
+							modalIsOpen={modalIsOpen.delete}
+							setModalIsOpen={(deleteModal) => setModalIsOpen({...modalIsOpen, delete: deleteModal})}
+						/>
+					)
+				}
 			</Box>
 		</Box>
 	);
