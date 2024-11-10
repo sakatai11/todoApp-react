@@ -227,7 +227,7 @@ function App() {
 					display="flex"
 					justifyContent="space-between"
 					// flexWrap='wrap'
-					mt={3}
+					mt={4}
 					px={3}
 					sx={{
 						"@media (max-width: 767px)": {

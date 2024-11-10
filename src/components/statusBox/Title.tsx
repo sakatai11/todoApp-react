@@ -20,20 +20,14 @@ const Title = ({ title, id, deleteList, testList}: Prop) => {
 
 	const modalRef = useRef<HTMLDivElement>(null);
 	const deleteModalRef = useRef<HTMLDivElement>(null); 
-	// console.log(deleteModalRef);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
-				// クリックイベントがモーダル外で発生した場合
+				// クリックイベントがセレクトモーダル外で発生した場合
 					if ( 
-						modalRef.current && !modalRef.current.contains(event.target as Node) || 
-						deleteModalRef.current && !deleteModalRef.current.contains(event.target as Node) 
+						modalRef.current && !modalRef.current.contains(event.target as Node) && !deleteModalRef.current
 					) {
-						if (deleteIsModalOpen) {
-							setDeleteIsModalOpen(false); 
-						} else {
-							setSelectModalIsOpen({ ...selectModalIsOpen, order: false, list: false }); 	
-						}
+						setSelectModalIsOpen({ ...selectModalIsOpen, order: false, list: false }); 	
 					}
 			};
 			// 画面をクリックした際に handleClickOutside 関数を実行
@@ -91,7 +85,7 @@ const Title = ({ title, id, deleteList, testList}: Prop) => {
 									setSelectModalIsOpen({...selectModalIsOpen, list: false });
 								}
 							}}
-							modalIsOpen={deleteIsModalOpen} 					
+							modalIsOpen={deleteIsModalOpen}
 							setModalIsOpen={setDeleteIsModalOpen}
 							setSelectModalIsOpen={(listModal) => setSelectModalIsOpen({...selectModalIsOpen, list: listModal })}
 						/>

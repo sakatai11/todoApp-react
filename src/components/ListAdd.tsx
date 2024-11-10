@@ -14,11 +14,7 @@ const ListAdd = ({status, error, addList, setInput, setError}: ListAddProps) => 
 	const [addBtn, setAddBtn] = useState(false);
 
 	return (
-		<Box
-      sx={{
-        mt:1
-      }}
-    >
+		<Box>
 			{addBtn ? (
 				<>
 					<TextField
