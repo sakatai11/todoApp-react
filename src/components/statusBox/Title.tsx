@@ -8,10 +8,9 @@ type Prop = {
 	title: string;
 	id: string;
 	deleteList: (id: string) => void;
-	testList: (id: string) => void;
 };
 
-const Title = ({ title, id, deleteList, testList}: Prop) => {
+const Title = ({ title, id, deleteList }: Prop) => {
 	const [selectModalIsOpen, setSelectModalIsOpen] = useState({
 		order: false,
 		list: false,
@@ -65,8 +64,6 @@ const Title = ({ title, id, deleteList, testList}: Prop) => {
 							selectModalIsOpen={selectModalIsOpen}
 							setSelectModalIsOpen={setSelectModalIsOpen}
 							setDeleteIsModalOpen={setDeleteIsModalOpen}
-							deleteList={deleteList}
-							testList={testList}
 						/>
 					</div>
 				)
@@ -81,7 +78,6 @@ const Title = ({ title, id, deleteList, testList}: Prop) => {
 								console.log('onDelete triggered'); // コンソールログを追加
 								if (id) {
 									deleteList(id);
-									testList(id);
 									setSelectModalIsOpen({...selectModalIsOpen, list: false });
 								}
 							}}

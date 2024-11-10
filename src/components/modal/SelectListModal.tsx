@@ -4,10 +4,8 @@ import Box from '@mui/material/Box';
 
 type HandleClickProps = {
   selectModalIsOpen: {order: boolean, list: boolean}
-  setDeleteIsModalOpen: (deleteIsModalOpen: boolean) => void;
   setSelectModalIsOpen: (modal:{order: boolean,list: boolean}) => void;
-  deleteList: (id: string) => void;
-  testList:  (id: string) => void;
+  setDeleteIsModalOpen: (deleteIsModalOpen: boolean) => void;
 }
 
 const SelectListModal = ({selectModalIsOpen, setSelectModalIsOpen, setDeleteIsModalOpen}:HandleClickProps) => {

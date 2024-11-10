@@ -131,10 +131,6 @@ function App() {
 		setLists(lists.filter((list) => list.id !== id)); // todo.id が id と一致しない list だけを残す新しい配列を作成
 	};
 
-	const testList = (id: string) => {
-		console.log(`Deleting test with id: ${id}`);
-	};
-
 	// 編集（モーダル内）
 	const editTodo = (id: string) => {
 		const todoToEdit = todos.find((todo) => todo.id === id); // todo.id が指定された id と一致するかどうかをチェック
@@ -251,8 +247,7 @@ function App() {
 							<Title 
 								title={statusPull.category}
 								id={statusPull.id}
-								deleteList={deleteList} 
-								testList={testList}
+								deleteList={deleteList}
 							/>
 							<Box
 								display="flex"
