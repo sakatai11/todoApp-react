@@ -119,14 +119,20 @@ function App() {
 
 	// todo削除
 	const deleteTodo = async (id: string) => {
+		console.log(`Deleting todo with id: ${id}`);
 		await deleteDoc(doc(db, "todos", id.toString())); // idをstring型に変換
 		setTodos(todos.filter((todo) => todo.id !== id)); // todo.id が id と一致しない todo だけを残す新しい配列を作成
 	};
 
 	// list削除
 	const deleteList = async (id: string) => {
+		console.log(`Deleting list with id: ${id}`);
 		await deleteDoc(doc(db, "lists", id.toString())); // idをstring型に変換
-		setLists(lists.filter((list) => list.id !== id)); // todo.id が id と一致しない todo だけを残す新しい配列を作成
+		setLists(lists.filter((list) => list.id !== id)); // todo.id が id と一致しない list だけを残す新しい配列を作成
+	};
+
+	const testList = (id: string) => {
+		console.log(`Deleting test with id: ${id}`);
 	};
 
 	// 編集（モーダル内）
@@ -245,7 +251,9 @@ function App() {
 							<Title 
 								title={statusPull.category}
 								id={statusPull.id}
-								deleteList={() => deleteList} />
+								deleteList={deleteList} 
+								testList={testList}
+							/>
 							<Box
 								display="flex"
 								flexDirection="column"
@@ -264,12 +272,10 @@ function App() {
 										<TodoList
 											key={todo.id}
 											todo={todo}
-											clickOption={{
-												deleteTodo: deleteTodo,
-												editTodo: editTodo,
-												saveTodo: saveTodo,
-												setEditId: setEditId,
-											}}
+											deleteTodo={deleteTodo}
+											editTodo={editTodo}
+											saveTodo={saveTodo}
+											setEditId={setEditId}
 											statusPull={lists}
 											isEditing={editId === todo.id}
 											input={input}

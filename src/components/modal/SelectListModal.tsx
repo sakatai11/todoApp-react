@@ -1,19 +1,16 @@
-import { useState } from 'react';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Box from '@mui/material/Box';
-import DeleteModal from './DeleteModal';
 
 type HandleClickProps = {
-  id: string;
-  modalIsOpen: {order: boolean, list: boolean}
-  setModalIsOpen: (modal:{order: boolean,list: boolean}) => void;
+  selectModalIsOpen: {order: boolean, list: boolean}
+  setDeleteIsModalOpen: (deleteIsModalOpen: boolean) => void;
+  setSelectModalIsOpen: (modal:{order: boolean,list: boolean}) => void;
   deleteList: (id: string) => void;
+  testList:  (id: string) => void;
 }
 
-const SelectListModal = ({id, modalIsOpen, setModalIsOpen, deleteList}:HandleClickProps) => {
-  const [deleteIsModalOpen, setDeleteIsModalOpen] = useState(false);
-  console.log(id);
+const SelectListModal = ({selectModalIsOpen, setSelectModalIsOpen, setDeleteIsModalOpen}:HandleClickProps) => {
 
  return (
     <Box
@@ -39,27 +36,19 @@ const SelectListModal = ({id, modalIsOpen, setModalIsOpen, deleteList}:HandleCli
           color: "rgba(0, 0, 0, 0.54)"
         }}
       >
-        <Button onClick={() => setModalIsOpen({...modalIsOpen, order: false, list: false})}>順番を変える</Button>
-        <Button onClick={() => {
-          setDeleteIsModalOpen(true);
-          setModalIsOpen({...modalIsOpen, order: false, list: false });
-        }
+        <Button 
+          onClick={() => 
+            setSelectModalIsOpen({...selectModalIsOpen, order: false, list: false}
+
+            )}>順番を変える</Button>
+        <Button 
+          onClick={() => {
+            setDeleteIsModalOpen(true);
+            setSelectModalIsOpen({...selectModalIsOpen, order: false, list: true });
+          }
         }>リストを削除する</Button>
 
       </ButtonGroup>
-        {
-          (deleteIsModalOpen && id) && (
-            <DeleteModal
-              modalIsOpen={deleteIsModalOpen} 					
-              onDelete={() => {
-                if (id) {
-                  deleteList(id);
-                }
-              }}
-              setModalIsOpen={() => setDeleteIsModalOpen}
-            />
-          )
-        }
     </Box>
  );
 };

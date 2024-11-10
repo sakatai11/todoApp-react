@@ -12,12 +12,10 @@ import Modal from "./modal/Modal";
 
 type TodoProps = {
 	todo: TodoListProps;
-	clickOption: {
-		deleteTodo: (id: string) => void;
-		editTodo: (id: string) => void;
-		saveTodo: () => void;
-		setEditId: (id: string | null) => void;
-	};
+	deleteTodo: (id: string) => void;
+	editTodo: (id: string) => void;
+	saveTodo: () => void;
+	setEditId: (id: string | null) => void;
 	statusPull: Status[];
 	isEditing: boolean;
 	input: { text: string; status: string }; // inputをオブジェクト型に変更
@@ -29,7 +27,10 @@ type TodoProps = {
 
 const TodoList = ({
 	todo,
-	clickOption,
+	deleteTodo, 
+	editTodo, 
+	saveTodo, 
+	setEditId,
 	statusPull,
 	isEditing,
 	input,
@@ -38,7 +39,6 @@ const TodoList = ({
 	setError,
 	toggleSelected,
 }: TodoProps) => {
-	const { deleteTodo, editTodo, saveTodo, setEditId } = clickOption;
 	const [modalIsOpen, setModalIsOpen] = useState({
 		edit: false,
 		delete: false,
@@ -185,13 +185,6 @@ const TodoList = ({
 						saveTodo={saveTodo}
 					/>
 				)}
-				{/* <DeleteModal
-					onDelete={() => {
-						if (todo.id) {
-							deleteTodo(todo.id);
-						}
-					}}
-				/> */}
 			<Button
 				// variant="outlined"
 				onClick={() => setModalIsOpen({...modalIsOpen, delete: true})}

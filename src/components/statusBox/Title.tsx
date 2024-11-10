@@ -1,26 +1,39 @@
 import { Box, IconButton } from "@mui/material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import SelectListModal from "../modal/SelectListModal";
+import DeleteModal from "../modal/DeleteModal";
 import { useState, useEffect, useRef } from "react";
 
 type Prop = {
 	title: string;
 	id: string;
-	deleteList: (id: string) => void
+	deleteList: (id: string) => void;
+	testList: (id: string) => void;
 };
 
-const Title = ({ title, id, deleteList }: Prop) => {
-	const [modalIsOpen, setModalIsOpen] = useState({
+const Title = ({ title, id, deleteList, testList}: Prop) => {
+	const [selectModalIsOpen, setSelectModalIsOpen] = useState({
 		order: false,
 		list: false,
 	});
+  const [deleteIsModalOpen, setDeleteIsModalOpen] = useState(false);
+
 	const modalRef = useRef<HTMLDivElement>(null);
+	const deleteModalRef = useRef<HTMLDivElement>(null); 
+	// console.log(deleteModalRef);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 				// クリックイベントがモーダル外で発生した場合
-					if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-						setModalIsOpen({...modalIsOpen, order:false, list: false});
+					if ( 
+						modalRef.current && !modalRef.current.contains(event.target as Node) || 
+						deleteModalRef.current && !deleteModalRef.current.contains(event.target as Node) 
+					) {
+						if (deleteIsModalOpen) {
+							setDeleteIsModalOpen(false); 
+						} else {
+							setSelectModalIsOpen({ ...selectModalIsOpen, order: false, list: false }); 	
+						}
 					}
 			};
 			// 画面をクリックした際に handleClickOutside 関数を実行
@@ -29,7 +42,7 @@ const Title = ({ title, id, deleteList }: Prop) => {
 			return () => {
 					document.removeEventListener("mousedown", handleClickOutside);
 			};
-	}, [modalRef]);
+	}, [modalRef, deleteModalRef]);
 
 	return (
 		<Box
@@ -41,7 +54,7 @@ const Title = ({ title, id, deleteList }: Prop) => {
 		>
 			{title}
 			<IconButton
-				onClick={() => setModalIsOpen({...modalIsOpen, order:true, list: true})}
+				onClick={() => setSelectModalIsOpen({...selectModalIsOpen, order:true, list: true})}
 				sx={{
 					position: "absolute",
 					top: 0,
@@ -52,13 +65,35 @@ const Title = ({ title, id, deleteList }: Prop) => {
 				<MoreVertIcon />
 			</IconButton>
 			{
-				(modalIsOpen.order && modalIsOpen.list) && (
+				(selectModalIsOpen.order || selectModalIsOpen.list) && (
 					<div ref={modalRef}>
 						<SelectListModal 
-							id={id}
-							modalIsOpen={modalIsOpen}
-							setModalIsOpen={() => setModalIsOpen({...modalIsOpen})}
-							deleteList={() => deleteList}
+							selectModalIsOpen={selectModalIsOpen}
+							setSelectModalIsOpen={setSelectModalIsOpen}
+							setDeleteIsModalOpen={setDeleteIsModalOpen}
+							deleteList={deleteList}
+							testList={testList}
+						/>
+					</div>
+				)
+			}
+
+			{
+				(deleteIsModalOpen && id 
+				) && (
+					<div ref={deleteModalRef}>
+						<DeleteModal
+							onDelete={() => {
+								console.log('onDelete triggered'); // コンソールログを追加
+								if (id) {
+									deleteList(id);
+									testList(id);
+									setSelectModalIsOpen({...selectModalIsOpen, list: false });
+								}
+							}}
+							modalIsOpen={deleteIsModalOpen} 					
+							setModalIsOpen={setDeleteIsModalOpen}
+							setSelectModalIsOpen={(listModal) => setSelectModalIsOpen({...selectModalIsOpen, list: listModal })}
 						/>
 					</div>
 				)

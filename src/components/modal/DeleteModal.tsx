@@ -6,10 +6,11 @@ import CloseIcon from "@mui/icons-material/Close";
 type DeleteProp = {
 	modalIsOpen: boolean;
 	onDelete: () => void;
-	setModalIsOpen: (modalIsOpen: boolean) => void
+	setModalIsOpen: (modalIsOpen: boolean) => void;
+	setSelectModalIsOpen?: (listModal:boolean) => void;
 };
 
-const DeleteModal = ({ modalIsOpen, onDelete, setModalIsOpen }: DeleteProp) => {
+const DeleteModal = ({ modalIsOpen, onDelete, setModalIsOpen, setSelectModalIsOpen }: DeleteProp) => {
 
 	return (
 		<>
@@ -70,14 +71,26 @@ const DeleteModal = ({ modalIsOpen, onDelete, setModalIsOpen }: DeleteProp) => {
 							<Button
 								variant="contained"
 								sx={{ maxWidth: "120px ", width: "100%" }}
-								onClick={onDelete}
+								onClick={() => {
+									console.log('Delete button clicked'); // コンソールログを追加
+									onDelete();
+									if (setSelectModalIsOpen) { 
+										setSelectModalIsOpen(false);
+									 }
+								}}
 							>
 								OK
 							</Button>
 							<Button
 								variant="contained"
 								sx={{ maxWidth: "120px ", width: "100%" }}
-								onClick={() => setModalIsOpen(false)}
+								onClick={() => {
+									console.log('cancel button clicked'); // コンソールログを追加
+									setModalIsOpen(false);
+									if (setSelectModalIsOpen) { 
+										setSelectModalIsOpen(false);
+									 }
+								}}
 							>
 								キャンセル
 							</Button>
