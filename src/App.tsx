@@ -127,8 +127,6 @@ function App() {
 
 	// list削除
 	const deleteList = async (id: string,  title: string) => {
-		console.log(`Deleting todo with title ${title}`);
-		console.log(`Deleting list with id: ${id}`);
 
 		// リストを削除 
 		await deleteDoc(doc(db, "lists", id.toString())); 
