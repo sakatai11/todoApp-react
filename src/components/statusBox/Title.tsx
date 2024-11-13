@@ -7,7 +7,7 @@ import { useState, useEffect, useRef } from "react";
 type Prop = {
 	title: string;
 	id: string;
-	deleteList: (id: string) => void;
+	deleteList: (id: string, title: string) => void;
 };
 
 const Title = ({ title, id, deleteList }: Prop) => {
@@ -77,7 +77,7 @@ const Title = ({ title, id, deleteList }: Prop) => {
 							onDelete={() => {
 								console.log('onDelete triggered'); // コンソールログを追加
 								if (id) {
-									deleteList(id);
+									deleteList(id,title);
 									setSelectModalIsOpen({...selectModalIsOpen, list: false });
 								}
 							}}

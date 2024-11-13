@@ -97,19 +97,20 @@ function App() {
 		// list追加
 		const addList = async () => {
 			if (input.status) {
+
+				// リストの数を再計算して連続番号を振り直す 
+				const updatedLists = lists.map((list, index) => ({ ...list, number: index + 1 }));
+
 				const newList = {
 					category: input.status,
-					number: lists.length + 1
+					number: updatedLists.length + 1
 				};
 				console.log(newList.number);
 				const docRef = await addDoc(collection(db, "lists"), newList);
-				setLists((prevLists) => {
-					const updatedLists = [...prevLists, { id: docRef.id, ...newList }]; // 新しく配列要素を追加
-					return updatedLists.sort((a, b) => {
-						const numberComparison = a.number - b.number;
-						return numberComparison; // 条件を実行
-					});
-				});
+
+				// 再計算されたリストと新しいリストを追加してセットする 
+				setLists([...updatedLists, { id: docRef.id, ...newList }]);
+
 				setError({ ...error, addListArea: false }); // エラーをリセット
 			} else {
 				setError({ ...error, addListArea: true }); // エラー表示
@@ -125,10 +126,29 @@ function App() {
 	};
 
 	// list削除
-	const deleteList = async (id: string) => {
+	const deleteList = async (id: string,  title: string) => {
+		console.log(`Deleting todo with title ${title}`);
 		console.log(`Deleting list with id: ${id}`);
-		await deleteDoc(doc(db, "lists", id.toString())); // idをstring型に変換
-		setLists(lists.filter((list) => list.id !== id)); // todo.id が id と一致しない list だけを残す新しい配列を作成
+
+		// リストを削除 
+		await deleteDoc(doc(db, "lists", id.toString())); 
+		setLists(lists.filter((list) => list.id !== id));// todo.id が id と一致しない list だけを残す新しい配列を作成
+
+		// 該当するtodosを削除 
+		const todosToDelete = todos.filter((todo) => todo.status === title); // 該当する配列を作成
+		console.log(todosToDelete);
+
+		const deleteTodoPromises = todosToDelete.map(async (todo) => { 
+			if (todo.id !== undefined) { 
+				await deleteDoc(doc(db, "todos", todo.id.toString())); 
+			} else {
+				return;
+			}
+		});
+
+		// 削除が完了するのを待つ 
+		await Promise.all(deleteTodoPromises); 
+		setTodos(todos.filter((todo) => todo.status !== title)); // todo.id が id と一致しない todo だけを残す新しい配列を作成
 	};
 
 	// 編集（モーダル内）
