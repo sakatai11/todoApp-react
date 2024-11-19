@@ -74,6 +74,7 @@ const Title = ({ title, id, deleteList }: Prop) => {
 				) && (
 					<div ref={deleteModalRef}>
 						<DeleteModal
+							title={title}
 							onDelete={() => {
 								console.log('onDelete triggered'); // コンソールログを追加
 								if (id) {

@@ -4,13 +4,14 @@ import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
 
 type DeleteProp = {
+	title?: string;
 	modalIsOpen: boolean;
 	onDelete: () => void;
 	setModalIsOpen: (modalIsOpen: boolean) => void;
 	setSelectModalIsOpen?: (listModal:boolean) => void;
 };
 
-const DeleteModal = ({ modalIsOpen, onDelete, setModalIsOpen, setSelectModalIsOpen }: DeleteProp) => {
+const DeleteModal = ({ title, modalIsOpen, onDelete, setModalIsOpen, setSelectModalIsOpen }: DeleteProp) => {
 
 	return (
 		<>
@@ -56,9 +57,14 @@ const DeleteModal = ({ modalIsOpen, onDelete, setModalIsOpen, setSelectModalIsOp
 							}}
 							onClick={() => setModalIsOpen(false)}
 						/>
-
 						<Typography variant="h6" sx={{ textAlign: "center" }}>
-							削除してもいいですか？
+							削除しても問題ないですか？	
+						</Typography>
+						<Typography variant="subtitle2" sx={{ textAlign: "center" }}>
+							{ 
+							title && (
+								"※削除する場合、todoも消去されます。"
+							)}
 						</Typography>
 						<Box
 							sx={{
@@ -68,6 +74,7 @@ const DeleteModal = ({ modalIsOpen, onDelete, setModalIsOpen, setSelectModalIsOp
 								marginTop: 3,
 							}}
 						>
+
 							<Button
 								variant="contained"
 								sx={{ maxWidth: "120px ", width: "100%" }}

@@ -97,7 +97,6 @@ function App() {
 		// list追加
 		const addList = async () => {
 			if (input.status) {
-
 				// リストの数を再計算して連続番号を振り直す 
 				const updatedLists = lists.map((list, index) => ({ ...list, number: index + 1 }));
 
@@ -110,12 +109,13 @@ function App() {
 
 				// 再計算されたリストと新しいリストを追加してセットする 
 				setLists([...updatedLists, { id: docRef.id, ...newList }]);
-
+				setInput({ ...input , status: "" }); //ステータスリセット
 				setError({ ...error, addListArea: false }); // エラーをリセット
 			} else {
 				setError({ ...error, addListArea: true }); // エラー表示
 				return;
 			}
+
 		};
 
 	// todo削除
@@ -127,7 +127,6 @@ function App() {
 
 	// list削除
 	const deleteList = async (id: string,  title: string) => {
-
 		// リストを削除 
 		await deleteDoc(doc(db, "lists", id.toString())); 
 		setLists(lists.filter((list) => list.id !== id));// todo.id が id と一致しない list だけを残す新しい配列を作成
