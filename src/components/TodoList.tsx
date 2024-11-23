@@ -71,6 +71,7 @@ const TodoList = ({
 			// display="flex"
 			// alignItems="center"
 			// justifyContent="space-between"
+
 			sx={{
 				boxShadow: 3, // 影の強さを指定
 				padding: "16px 16px 10px 16px", // パディングを追加
@@ -84,7 +85,7 @@ const TodoList = ({
 			<Box
 				component="p"
 				sx={{
-					// whiteSpace: "nowrap",,
+					// whiteSpace: "nowrap",
 					margin: 0,
 					overflow: "hidden",
 					textOverflow: "ellipsis",
