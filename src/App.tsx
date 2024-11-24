@@ -52,9 +52,8 @@ function App() {
 
 		console.log(todosData);
 		const sortedTodos = todosData.sort((a, b) => {
-			const boolComparison = Number(b.bool) - Number(a.bool);
 			const timeComparison = b.time - a.time;
-			return boolComparison || timeComparison; // 両方の条件を実行
+			return timeComparison;
 		});
 		const listsData = listSnapshot.docs.map((document) => ({
 			// オブジェクトにとして格納
@@ -267,10 +266,10 @@ function App() {
 								deleteList={deleteList}
 							/>
 							<Box
-								display="flex"
-								flexDirection="column"
-								alignItems="center"
 								sx={{
+									display:"flex",
+									flexDirection:"column",
+									alignItems:"center",
 									overflow: "auto",
 									"@media (max-width: 767px)": {
 										p: 1.2,
@@ -278,31 +277,69 @@ function App() {
 								}}
 								p={2}
 							>
-								{todos
-									.filter((todo) => statusPull.category === todo.status)
-									.map((todo) => (
-										<TodoList
-											key={todo.id}
-											todo={todo}
-											deleteTodo={deleteTodo}
-											editTodo={editTodo}
-											saveTodo={saveTodo}
-											setEditId={setEditId}
-											statusPull={lists}
-											isEditing={editId === todo.id}
-											input={input}
-											setInput={setInput}
-											error={error.listModalArea}
-											setError={(modalError) =>
-												setError({ ...error, listModalArea: modalError })
-											} // ラッパー関数を渡す
-											toggleSelected={() => {
-												if (todo.id) {
-													toggleSelected(todo.id);
-												}
-											}} // idがundefinedでないことを確認
-										/>
+								<Box 
+									sx={{
+										width: 1,
+									}}
+								>
+									{todos
+										.filter((todo) => (statusPull.category === todo.status) && todo.bool )
+										.map((todo) => (
+											<TodoList
+												key={todo.id}
+												todo={todo}
+												deleteTodo={deleteTodo}
+												editTodo={editTodo}
+												saveTodo={saveTodo}
+												setEditId={setEditId}
+												statusPull={lists}
+												isEditing={editId === todo.id}
+												input={input}
+												setInput={setInput}
+												error={error.listModalArea}
+												setError={(modalError) =>
+													setError({ ...error, listModalArea: modalError })
+												} // ラッパー関数を渡す
+												toggleSelected={() => {
+													if (todo.id) {
+														toggleSelected(todo.id);
+													}
+												}} // idがundefinedでないことを確認
+											/>
 									))}
+								</Box>
+
+								<Box
+									sx={{
+										width: 1,
+									}}
+								>
+									{todos
+										.filter((todo) => (statusPull.category === todo.status) && !todo.bool )
+										.map((todo) => (
+											<TodoList
+												key={todo.id}
+												todo={todo}
+												deleteTodo={deleteTodo}
+												editTodo={editTodo}
+												saveTodo={saveTodo}
+												setEditId={setEditId}
+												statusPull={lists}
+												isEditing={editId === todo.id}
+												input={input}
+												setInput={setInput}
+												error={error.listModalArea}
+												setError={(modalError) =>
+													setError({ ...error, listModalArea: modalError })
+												} // ラッパー関数を渡す
+												toggleSelected={() => {
+													if (todo.id) {
+														toggleSelected(todo.id);
+													}
+												}} // idがundefinedでないことを確認
+											/>
+									))}
+								</Box>
 							</Box>
 						</Box>
 					))}
