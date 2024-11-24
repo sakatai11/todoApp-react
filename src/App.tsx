@@ -249,100 +249,109 @@ function App() {
 						},
 					}}
 				>
-					{lists.map((statusPull) => (
-						<Box
-							key={statusPull.id}
-							sx={{
-								minWidth: "320px",
-								"@media (max-width: 767px)": {
-									width: "50%",
-									minWidth: "auto",
-								},
-							}}
-						>
-							<Title 
-								title={statusPull.category}
-								id={statusPull.id}
-								deleteList={deleteList}
-							/>
+					{lists.map((statusPull) => {
+						const filteredTrueTodos = todos.filter((todo) => statusPull.category === todo.status && todo.bool); 
+						const filteredFalseTodos = todos.filter((todo) => statusPull.category === todo.status && !todo.bool);
+
+						return (
 							<Box
+								key={statusPull.id}
 								sx={{
-									display:"flex",
-									flexDirection:"column",
-									alignItems:"center",
-									overflow: "auto",
+									minWidth: "320px",
 									"@media (max-width: 767px)": {
-										p: 1.2,
+										width: "50%",
+										minWidth: "auto",
 									},
 								}}
-								p={2}
 							>
-								<Box 
-									sx={{
-										width: 1,
-									}}
-								>
-									{todos
-										.filter((todo) => (statusPull.category === todo.status) && todo.bool )
-										.map((todo) => (
-											<TodoList
-												key={todo.id}
-												todo={todo}
-												deleteTodo={deleteTodo}
-												editTodo={editTodo}
-												saveTodo={saveTodo}
-												setEditId={setEditId}
-												statusPull={lists}
-												isEditing={editId === todo.id}
-												input={input}
-												setInput={setInput}
-												error={error.listModalArea}
-												setError={(modalError) =>
-													setError({ ...error, listModalArea: modalError })
-												} // ラッパー関数を渡す
-												toggleSelected={() => {
-													if (todo.id) {
-														toggleSelected(todo.id);
-													}
-												}} // idがundefinedでないことを確認
-											/>
-									))}
-								</Box>
-
+								<Title 
+									title={statusPull.category}
+									id={statusPull.id}
+									deleteList={deleteList}
+								/>
 								<Box
 									sx={{
-										width: 1,
+										display:"flex",
+										flexDirection:"column",
+										alignItems:"center",
+										overflow: "auto",
+										"@media (max-width: 767px)": {
+											p: 1.2,
+										},
 									}}
+									p={2}
 								>
-									{todos
-										.filter((todo) => (statusPull.category === todo.status) && !todo.bool )
-										.map((todo) => (
-											<TodoList
-												key={todo.id}
-												todo={todo}
-												deleteTodo={deleteTodo}
-												editTodo={editTodo}
-												saveTodo={saveTodo}
-												setEditId={setEditId}
-												statusPull={lists}
-												isEditing={editId === todo.id}
-												input={input}
-												setInput={setInput}
-												error={error.listModalArea}
-												setError={(modalError) =>
-													setError({ ...error, listModalArea: modalError })
-												} // ラッパー関数を渡す
-												toggleSelected={() => {
-													if (todo.id) {
-														toggleSelected(todo.id);
-													}
-												}} // idがundefinedでないことを確認
-											/>
-									))}
+									{/* boolがtrueの場合 */}
+									<Box 
+										sx={{
+											width: 1,
+											display: filteredTrueTodos.length > 0 ? 'block' : 'none',
+											marginBottom: 4,
+										}}
+									>
+										{todos
+											.filter((todo) => (statusPull.category === todo.status) && todo.bool )
+											.map((todo) => (
+												<TodoList
+													key={todo.id}
+													todo={todo}
+													deleteTodo={deleteTodo}
+													editTodo={editTodo}
+													saveTodo={saveTodo}
+													setEditId={setEditId}
+													statusPull={lists}
+													isEditing={editId === todo.id}
+													input={input}
+													setInput={setInput}
+													error={error.listModalArea}
+													setError={(modalError) =>
+														setError({ ...error, listModalArea: modalError })
+													} // ラッパー関数を渡す
+													toggleSelected={() => {
+														if (todo.id) {
+															toggleSelected(todo.id);
+														}
+													}} // idがundefinedでないことを確認
+												/>
+										))}
+									</Box>
+									{/* boolがfalseの場合 */}
+									<Box
+										sx={{
+											width: 1,
+											display: filteredFalseTodos.length > 0 ? 'block' : 'none',
+										}}
+									>
+										{todos
+											.filter((todo) => (statusPull.category === todo.status) && !todo.bool )
+											.map((todo) => (
+												<TodoList
+													key={todo.id}
+													todo={todo}
+													deleteTodo={deleteTodo}
+													editTodo={editTodo}
+													saveTodo={saveTodo}
+													setEditId={setEditId}
+													statusPull={lists}
+													isEditing={editId === todo.id}
+													input={input}
+													setInput={setInput}
+													error={error.listModalArea}
+													setError={(modalError) =>
+														setError({ ...error, listModalArea: modalError })
+													} // ラッパー関数を渡す
+													toggleSelected={() => {
+														if (todo.id) {
+															toggleSelected(todo.id);
+														}
+													}} // idがundefinedでないことを確認
+												/>
+										))}
+									</Box>
 								</Box>
 							</Box>
-						</Box>
-					))}
+						);
+						})}
 					<Box
 						sx={{
 							minWidth: "320px",
