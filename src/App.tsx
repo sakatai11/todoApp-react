@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import { TodoListProps } from "@/src/types/todos";
-import { StatusListProps } from "@/src/types/lists";
-import Push from "@/src/components/Push";
-import TodoList from "@/src/components/TodoList";
-import Title from "@/src/components/statusBox/Title";
-import ListAdd from "@/src/components/ListAdd";
-// import { statusesPull } from "./status/statuses";
-import { jstTime } from "@/src/utils/dateUtils";
+import { TodoListProps } from "./types/todos";
+import { StatusListProps } from "./types/lists";
+import Push from "./components/Push";
+import TodoList from "./components/TodoList";
+import Title from "./components/statusBox/Title";
+import ListAdd from "./components/ListAdd";
+// import { statusesPull } from "./status/statuses"
+import { jstTime } from "./utils/dateUtils";
 // firebase
 import { db } from "@/src/utils/firebase";
 import {
