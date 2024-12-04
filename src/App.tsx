@@ -9,7 +9,7 @@ import ListAdd from "./components/ListAdd";
 // import { statusesPull } from "./status/statuses"
 import { jstTime } from "./utils/dateUtils";
 // firebase
-import { db } from "@/src/utils/firebase";
+import { db } from "./utils/firebase";
 import {
 	doc,
 	getDocs,
