@@ -1,40 +1,25 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { Button, Box, Typography } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 type DeleteProp = {
+	title?: string;
+	modalIsOpen: boolean;
 	onDelete: () => void;
+	setModalIsOpen: (modalIsOpen: boolean) => void;
+	setSelectModalIsOpen?: (listModal: boolean) => void;
 };
 
-const DeleteModal = ({ onDelete }: DeleteProp) => {
-	const [modalIsOpen, setModalIsOpen] = useState(false);
-
+const DeleteModal = ({
+	title,
+	modalIsOpen,
+	onDelete,
+	setModalIsOpen,
+	setSelectModalIsOpen,
+}: DeleteProp) => {
 	return (
 		<>
-			<Button
-				// variant="outlined"
-				onClick={() => setModalIsOpen(true)}
-				sx={{
-					minWidth: "auto",
-					"@media (max-width: 767px)": {
-						padding: 0.5,
-					},
-				}}
-			>
-				<DeleteIcon
-					sx={{
-						width: 20,
-						height: 20,
-						"@media (max-width: 767px)": {
-							width: 15,
-							height: 15,
-						},
-					}}
-				/>
-			</Button>
-
 			<Modal //モーダル
 				open={modalIsOpen}
 				onClose={() => setModalIsOpen(false)}
@@ -77,9 +62,11 @@ const DeleteModal = ({ onDelete }: DeleteProp) => {
 							}}
 							onClick={() => setModalIsOpen(false)}
 						/>
-
 						<Typography variant="h6" sx={{ textAlign: "center" }}>
-							削除してもいいですか？
+							削除しても問題ないですか？
+						</Typography>
+						<Typography variant="subtitle2" sx={{ textAlign: "center" }}>
+							{title && "※削除する場合、todoも消去されます。"}
 						</Typography>
 						<Box
 							sx={{
@@ -92,14 +79,26 @@ const DeleteModal = ({ onDelete }: DeleteProp) => {
 							<Button
 								variant="contained"
 								sx={{ maxWidth: "120px ", width: "100%" }}
-								onClick={onDelete}
+								onClick={() => {
+									console.log("Delete button clicked"); // コンソールログを追加
+									onDelete();
+									if (setSelectModalIsOpen) {
+										setSelectModalIsOpen(false);
+									}
+								}}
 							>
 								OK
 							</Button>
 							<Button
 								variant="contained"
 								sx={{ maxWidth: "120px ", width: "100%" }}
-								onClick={() => setModalIsOpen(false)}
+								onClick={() => {
+									console.log("cancel button clicked"); // コンソールログを追加
+									setModalIsOpen(false);
+									if (setSelectModalIsOpen) {
+										setSelectModalIsOpen(false);
+									}
+								}}
 							>
 								キャンセル
 							</Button>

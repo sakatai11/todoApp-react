@@ -9,6 +9,7 @@ module.exports = {
 		"plugin:import/typescript",
 		"prettier",
 		"plugin:react/recommended",
+		// "plugin:import/warnings", // 追加
 	],
 	ignorePatterns: ["dist", ".eslintrc.cjs", "vite.config.ts"],
 	overrides: [],
@@ -46,6 +47,11 @@ module.exports = {
 		],
 	},
 	settings: {
+		"import/resolver": {
+			node: {
+				extensions: [".js", ".jsx", ".ts", ".tsx"],
+			},
+		},
 		react: {
 			version: "detect",
 		},
