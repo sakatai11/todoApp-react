@@ -6,7 +6,7 @@ import Push from "./components/Push";
 import TodoList from "./components/TodoList";
 import Title from "./components/statusBox/Title";
 import ListAdd from "./components/ListAdd";
-// import { statusesPull } from "./status/statuses";
+// import { statusesPull } from "./status/statuses"
 import { jstTime } from "./utils/dateUtils";
 // firebase
 import { db } from "./utils/firebase";
