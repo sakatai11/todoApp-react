@@ -8,11 +8,16 @@ type DeleteProp = {
 	modalIsOpen: boolean;
 	onDelete: () => void;
 	setModalIsOpen: (modalIsOpen: boolean) => void;
-	setSelectModalIsOpen?: (listModal:boolean) => void;
+	setSelectModalIsOpen?: (listModal: boolean) => void;
 };
 
-const DeleteModal = ({ title, modalIsOpen, onDelete, setModalIsOpen, setSelectModalIsOpen }: DeleteProp) => {
-
+const DeleteModal = ({
+	title,
+	modalIsOpen,
+	onDelete,
+	setModalIsOpen,
+	setSelectModalIsOpen,
+}: DeleteProp) => {
 	return (
 		<>
 			<Modal //モーダル
@@ -58,13 +63,10 @@ const DeleteModal = ({ title, modalIsOpen, onDelete, setModalIsOpen, setSelectMo
 							onClick={() => setModalIsOpen(false)}
 						/>
 						<Typography variant="h6" sx={{ textAlign: "center" }}>
-							削除しても問題ないですか？	
+							削除しても問題ないですか？
 						</Typography>
 						<Typography variant="subtitle2" sx={{ textAlign: "center" }}>
-							{ 
-							title && (
-								"※削除する場合、todoも消去されます。"
-							)}
+							{title && "※削除する場合、todoも消去されます。"}
 						</Typography>
 						<Box
 							sx={{
@@ -74,16 +76,15 @@ const DeleteModal = ({ title, modalIsOpen, onDelete, setModalIsOpen, setSelectMo
 								marginTop: 3,
 							}}
 						>
-
 							<Button
 								variant="contained"
 								sx={{ maxWidth: "120px ", width: "100%" }}
 								onClick={() => {
-									console.log('Delete button clicked'); // コンソールログを追加
+									console.log("Delete button clicked"); // コンソールログを追加
 									onDelete();
-									if (setSelectModalIsOpen) { 
+									if (setSelectModalIsOpen) {
 										setSelectModalIsOpen(false);
-									 }
+									}
 								}}
 							>
 								OK
@@ -92,11 +93,11 @@ const DeleteModal = ({ title, modalIsOpen, onDelete, setModalIsOpen, setSelectMo
 								variant="contained"
 								sx={{ maxWidth: "120px ", width: "100%" }}
 								onClick={() => {
-									console.log('cancel button clicked'); // コンソールログを追加
+									console.log("cancel button clicked"); // コンソールログを追加
 									setModalIsOpen(false);
-									if (setSelectModalIsOpen) { 
+									if (setSelectModalIsOpen) {
 										setSelectModalIsOpen(false);
-									 }
+									}
 								}}
 							>
 								キャンセル

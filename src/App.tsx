@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import { TodoListProps } from "@/src/types/todos.ts";
+import { TodoListProps } from "@/src/types/todos";
 import { StatusListProps } from "@/src/types/lists";
 import Push from "@/src/components/Push";
 import TodoList from "@/src/components/TodoList";
 import Title from "@/src/components/statusBox/Title";
 import ListAdd from "@/src/components/ListAdd";
 // import { statusesPull } from "./status/statuses";
-import { jstTime } from "./utils/dateUtils";
+import { jstTime } from "@/src/utils/dateUtils";
 // firebase
-import { db } from "./utils/firebase";
+import { db } from "@/src/utils/firebase";
 import {
 	doc,
 	getDocs,
@@ -93,29 +93,31 @@ function App() {
 		}
 	};
 
-		// list追加
-		const addList = async () => {
-			if (input.status) {
-				// リストの数を再計算して連続番号を振り直す 
-				const updatedLists = lists.map((list, index) => ({ ...list, number: index + 1 }));
+	// list追加
+	const addList = async () => {
+		if (input.status) {
+			// リストの数を再計算して連続番号を振り直す
+			const updatedLists = lists.map((list, index) => ({
+				...list,
+				number: index + 1,
+			}));
 
-				const newList = {
-					category: input.status,
-					number: updatedLists.length + 1
-				};
-				console.log(newList.number);
-				const docRef = await addDoc(collection(db, "lists"), newList);
+			const newList = {
+				category: input.status,
+				number: updatedLists.length + 1,
+			};
+			console.log(newList.number);
+			const docRef = await addDoc(collection(db, "lists"), newList);
 
-				// 再計算されたリストと新しいリストを追加してセットする 
-				setLists([...updatedLists, { id: docRef.id, ...newList }]);
-				setInput({ ...input , status: "" }); //ステータスリセット
-				setError({ ...error, addListArea: false }); // エラーをリセット
-			} else {
-				setError({ ...error, addListArea: true }); // エラー表示
-				return;
-			}
-
-		};
+			// 再計算されたリストと新しいリストを追加してセットする
+			setLists([...updatedLists, { id: docRef.id, ...newList }]);
+			setInput({ ...input, status: "" }); //ステータスリセット
+			setError({ ...error, addListArea: false }); // エラーをリセット
+		} else {
+			setError({ ...error, addListArea: true }); // エラー表示
+			return;
+		}
+	};
 
 	// todo削除
 	const deleteTodo = async (id: string) => {
@@ -125,25 +127,25 @@ function App() {
 	};
 
 	// list削除
-	const deleteList = async (id: string,  title: string) => {
-		// リストを削除 
-		await deleteDoc(doc(db, "lists", id.toString())); 
-		setLists(lists.filter((list) => list.id !== id));// todo.id が id と一致しない list だけを残す新しい配列を作成
+	const deleteList = async (id: string, title: string) => {
+		// リストを削除
+		await deleteDoc(doc(db, "lists", id.toString()));
+		setLists(lists.filter((list) => list.id !== id)); // todo.id が id と一致しない list だけを残す新しい配列を作成
 
-		// 該当するtodosを削除 
+		// 該当するtodosを削除
 		const todosToDelete = todos.filter((todo) => todo.status === title); // 該当する配列を作成
 		console.log(todosToDelete);
 
-		const deleteTodoPromises = todosToDelete.map(async (todo) => { 
-			if (todo.id !== undefined) { 
-				await deleteDoc(doc(db, "todos", todo.id.toString())); 
+		const deleteTodoPromises = todosToDelete.map(async (todo) => {
+			if (todo.id !== undefined) {
+				await deleteDoc(doc(db, "todos", todo.id.toString()));
 			} else {
 				return;
 			}
 		});
 
-		// 削除が完了するのを待つ 
-		await Promise.all(deleteTodoPromises); 
+		// 削除が完了するのを待つ
+		await Promise.all(deleteTodoPromises);
 		setTodos(todos.filter((todo) => todo.status !== title)); // todo.id が id と一致しない todo だけを残す新しい配列を作成
 	};
 
@@ -250,8 +252,12 @@ function App() {
 					}}
 				>
 					{lists.map((statusPull) => {
-						const filteredTrueTodos = todos.filter((todo) => statusPull.category === todo.status && todo.bool); 
-						const filteredFalseTodos = todos.filter((todo) => statusPull.category === todo.status && !todo.bool);
+						const filteredTrueTodos = todos.filter(
+							(todo) => statusPull.category === todo.status && todo.bool
+						);
+						const filteredFalseTodos = todos.filter(
+							(todo) => statusPull.category === todo.status && !todo.bool
+						);
 
 						return (
 							<Box
@@ -264,16 +270,16 @@ function App() {
 									},
 								}}
 							>
-								<Title 
+								<Title
 									title={statusPull.category}
 									id={statusPull.id}
 									deleteList={deleteList}
 								/>
 								<Box
 									sx={{
-										display:"flex",
-										flexDirection:"column",
-										alignItems:"center",
+										display: "flex",
+										flexDirection: "column",
+										alignItems: "center",
 										overflow: "auto",
 										"@media (max-width: 767px)": {
 											p: 1.2,
@@ -282,15 +288,18 @@ function App() {
 									p={2}
 								>
 									{/* boolがtrueの場合 */}
-									<Box 
+									<Box
 										sx={{
 											width: 1,
-											display: filteredTrueTodos.length > 0 ? 'block' : 'none',
+											display: filteredTrueTodos.length > 0 ? "block" : "none",
 											marginBottom: 4,
 										}}
 									>
 										{todos
-											.filter((todo) => (statusPull.category === todo.status) && todo.bool )
+											.filter(
+												(todo) =>
+													statusPull.category === todo.status && todo.bool
+											)
 											.map((todo) => (
 												<TodoList
 													key={todo.id}
@@ -313,17 +322,20 @@ function App() {
 														}
 													}} // idがundefinedでないことを確認
 												/>
-										))}
+											))}
 									</Box>
 									{/* boolがfalseの場合 */}
 									<Box
 										sx={{
 											width: 1,
-											display: filteredFalseTodos.length > 0 ? 'block' : 'none',
+											display: filteredFalseTodos.length > 0 ? "block" : "none",
 										}}
 									>
 										{todos
-											.filter((todo) => (statusPull.category === todo.status) && !todo.bool )
+											.filter(
+												(todo) =>
+													statusPull.category === todo.status && !todo.bool
+											)
 											.map((todo) => (
 												<TodoList
 													key={todo.id}
@@ -346,12 +358,12 @@ function App() {
 														}
 													}} // idがundefinedでないことを確認
 												/>
-										))}
+											))}
 									</Box>
 								</Box>
 							</Box>
 						);
-						})}
+					})}
 					<Box
 						sx={{
 							minWidth: "320px",
@@ -363,13 +375,17 @@ function App() {
 							},
 						}}
 					>
-						<ListAdd 
+						<ListAdd
 							status={input.status}
 							error={error.addListArea}
 							addList={addList}
-							setInput={(listStatus) => setInput({...input, status: listStatus})}
-							setError={(listTextError) => setError({...error, addListArea: listTextError })} 
-						/> 
+							setInput={(listStatus) =>
+								setInput({ ...input, status: listStatus })
+							}
+							setError={(listTextError) =>
+								setError({ ...error, addListArea: listTextError })
+							}
+						/>
 					</Box>
 				</Box>
 			</Box>

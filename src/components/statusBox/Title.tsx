@@ -1,5 +1,5 @@
 import { Box, IconButton } from "@mui/material";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SelectListModal from "../modal/SelectListModal";
 import DeleteModal from "../modal/DeleteModal";
 import { useState, useEffect, useRef } from "react";
@@ -15,26 +15,32 @@ const Title = ({ title, id, deleteList }: Prop) => {
 		order: false,
 		list: false,
 	});
-  const [deleteIsModalOpen, setDeleteIsModalOpen] = useState(false);
+	const [deleteIsModalOpen, setDeleteIsModalOpen] = useState(false);
 
 	const modalRef = useRef<HTMLDivElement>(null);
-	const deleteModalRef = useRef<HTMLDivElement>(null); 
+	const deleteModalRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
-				// クリックイベントがセレクトモーダル外で発生した場合
-					if ( 
-						modalRef.current && !modalRef.current.contains(event.target as Node) && !deleteModalRef.current
-					) {
-						setSelectModalIsOpen({ ...selectModalIsOpen, order: false, list: false }); 	
-					}
-			};
-			// 画面をクリックした際に handleClickOutside 関数を実行
-			document.addEventListener("mousedown", handleClickOutside);
-			// コンポーネントがアンマウントされた時にhandleClickOutside 関数を実行。クリーンアップ関数。
-			return () => {
-					document.removeEventListener("mousedown", handleClickOutside);
-			};
+			// クリックイベントがセレクトモーダル外で発生した場合
+			if (
+				modalRef.current &&
+				!modalRef.current.contains(event.target as Node) &&
+				!deleteModalRef.current
+			) {
+				setSelectModalIsOpen({
+					...selectModalIsOpen,
+					order: false,
+					list: false,
+				});
+			}
+		};
+		// 画面をクリックした際に handleClickOutside 関数を実行
+		document.addEventListener("mousedown", handleClickOutside);
+		// コンポーネントがアンマウントされた時にhandleClickOutside 関数を実行。クリーンアップ関数。
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
 	}, [modalRef, deleteModalRef]);
 
 	return (
@@ -47,48 +53,51 @@ const Title = ({ title, id, deleteList }: Prop) => {
 		>
 			{title}
 			<IconButton
-				onClick={() => setSelectModalIsOpen({...selectModalIsOpen, order:true, list: true})}
+				onClick={() =>
+					setSelectModalIsOpen({
+						...selectModalIsOpen,
+						order: true,
+						list: true,
+					})
+				}
 				sx={{
 					position: "absolute",
 					top: 0,
 					right: 10,
-					p: 0
+					p: 0,
 				}}
 			>
 				<MoreVertIcon />
 			</IconButton>
-			{
-				(selectModalIsOpen.order || selectModalIsOpen.list) && (
-					<div ref={modalRef}>
-						<SelectListModal 
-							selectModalIsOpen={selectModalIsOpen}
-							setSelectModalIsOpen={setSelectModalIsOpen}
-							setDeleteIsModalOpen={setDeleteIsModalOpen}
-						/>
-					</div>
-				)
-			}
+			{(selectModalIsOpen.order || selectModalIsOpen.list) && (
+				<div ref={modalRef}>
+					<SelectListModal
+						selectModalIsOpen={selectModalIsOpen}
+						setSelectModalIsOpen={setSelectModalIsOpen}
+						setDeleteIsModalOpen={setDeleteIsModalOpen}
+					/>
+				</div>
+			)}
 
-			{
-				(deleteIsModalOpen && id 
-				) && (
-					<div ref={deleteModalRef}>
-						<DeleteModal
-							title={title}
-							onDelete={() => {
-								console.log('onDelete triggered'); // コンソールログを追加
-								if (id) {
-									deleteList(id,title);
-									setSelectModalIsOpen({...selectModalIsOpen, list: false });
-								}
-							}}
-							modalIsOpen={deleteIsModalOpen}
-							setModalIsOpen={setDeleteIsModalOpen}
-							setSelectModalIsOpen={(listModal) => setSelectModalIsOpen({...selectModalIsOpen, list: listModal })}
-						/>
-					</div>
-				)
-			}
+			{deleteIsModalOpen && id && (
+				<div ref={deleteModalRef}>
+					<DeleteModal
+						title={title}
+						onDelete={() => {
+							console.log("onDelete triggered"); // コンソールログを追加
+							if (id) {
+								deleteList(id, title);
+								setSelectModalIsOpen({ ...selectModalIsOpen, list: false });
+							}
+						}}
+						modalIsOpen={deleteIsModalOpen}
+						setModalIsOpen={setDeleteIsModalOpen}
+						setSelectModalIsOpen={(listModal) =>
+							setSelectModalIsOpen({ ...selectModalIsOpen, list: listModal })
+						}
+					/>
+				</div>
+			)}
 		</Box>
 	);
 };
