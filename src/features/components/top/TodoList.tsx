@@ -1,3 +1,4 @@
+import React from "react";
 import { TodoListProps } from "../../../types/todos";
 import { useState } from "react";
 import DeleteModal from "../modal/DeleteModal";
@@ -44,20 +45,25 @@ const TodoList = ({
 		delete: false,
 	});
 
-	// URLを検出してリンクに変換する関数
+	// テキストのフォーマット調整する関数
 	const displayText = (text: string) => {
 		return formatter(text).map(({ type, content, index }) => {
-			const key = `${type}-${index}-${content}`;
 			if (type === "link") {
 				return (
-					<a key={key} href={content} target="_blank" rel="noopener noreferrer">
+					<a
+						key={index}
+						href={content}
+						target="_blank"
+						rel="noopener noreferrer"
+					>
 						{content}
 					</a>
 				);
-			} else if (type === "space") {
-				return <br key={key} />;
+			}
+			else if (type === "space") {
+				return <br key={index} />;
 			} else {
-				return <span key={key}>{content}</span>;
+				return  <React.Fragment key={index}>{content}</React.Fragment>;
 			}
 		});
 	};
@@ -81,7 +87,7 @@ const TodoList = ({
 			}}
 		>
 			<Box
-				component="p"
+				component="div"
 				sx={{
 					// whiteSpace: "nowrap",
 					margin: 0,
