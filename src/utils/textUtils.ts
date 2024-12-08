@@ -1,19 +1,32 @@
-// URLを検出してリンクに変換する関数
-export const linkify = (text: string) => {
+type FormatterResult = {
+	type: "link" | "space" | "normal";
+	content: string;
+	index: string;
+};
+
+export const formatter = (text: string): FormatterResult[] => {
 	const urlPattern = /(https?:\/\/[^\s]+)/g;
-	return text.split(urlPattern).map((part, index) => {
+	const result: FormatterResult[] = [];
+
+	text.split(urlPattern).forEach((part, index) => {
 		if (part.match(urlPattern)) {
-			return {
-				type: "link",
-				content: part,
-				index: index,
-			};
+			result.push({ type: "link", content: part, index: `link-${index}` }); // ユニークなindex
 		} else {
-			return {
-				type: "text",
-				content: part,
-				index: index,
-			};
+			const spacePattern = / /g;
+			part.split(spacePattern).forEach((subPart, subIndex) => {
+				const uniqueIndex = `normal-${index}-${subIndex}`; // サブインデックスも含めてユニークにする
+				if (subPart.match(urlPattern)) {
+					result.push({
+						type: "space",
+						content: subPart,
+						index: `space-${index}-${subIndex}`,
+					});
+				} else {
+					result.push({ type: "normal", content: subPart, index: uniqueIndex });
+				}
+			});
 		}
 	});
+
+	return result;
 };

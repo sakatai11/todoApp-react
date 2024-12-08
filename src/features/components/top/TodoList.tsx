@@ -2,7 +2,7 @@ import { TodoListProps } from "../../../types/todos";
 import { useState } from "react";
 import DeleteModal from "../modal/DeleteModal";
 import { Box, Button } from "@mui/material";
-import { linkify } from "../../../utils/textUtils";
+import { formatter } from "../../../utils/textUtils";
 import { Status } from "../../../types/todos";
 import ToggleButton from "@mui/material/ToggleButton";
 import PushPinIcon from "@mui/icons-material/PushPin";
@@ -46,20 +46,18 @@ const TodoList = ({
 
 	// URLを検出してリンクに変換する関数
 	const displayText = (text: string) => {
-		return linkify(text).map(({ type, content, index }) => {
+		return formatter(text).map(({ type, content, index }) => {
+			const key = `${type}-${index}-${content}`;
 			if (type === "link") {
 				return (
-					<a
-						key={index}
-						href={content}
-						target="_blank"
-						rel="noopener noreferrer"
-					>
+					<a key={key} href={content} target="_blank" rel="noopener noreferrer">
 						{content}
 					</a>
 				);
+			} else if (type === "space") {
+				return <br key={key} />;
 			} else {
-				return content;
+				return <span key={key}>{content}</span>;
 			}
 		});
 	};

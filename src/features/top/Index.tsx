@@ -21,7 +21,7 @@ import {
 	orderBy,
 } from "firebase/firestore";
 
-function BaseTop () {
+function BaseTop() {
 	const [todos, setTodos] = useState<TodoListProps[]>([]); // todoデータ
 	const [lists, setLists] = useState<StatusListProps[]>([]); // listデータ
 	const [input, setInput] = useState({
