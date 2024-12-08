@@ -1,14 +1,14 @@
-import { TodoListProps } from "../types/todos";
+import { TodoListProps } from "../../../types/todos";
 import { useState } from "react";
-import DeleteModal from "./modal/DeleteModal";
+import DeleteModal from "../modal/DeleteModal";
 import { Box, Button } from "@mui/material";
-import { linkify } from "../utils/textUtils";
-import { Status } from "../types/todos";
+import { linkify } from "../../../utils/textUtils";
+import { Status } from "../../../types/todos";
 import ToggleButton from "@mui/material/ToggleButton";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Modal from "./modal/Modal";
+import Modal from "../modal/Modal";
 
 type TodoProps = {
 	todo: TodoListProps;

@@ -1,10 +1,10 @@
 import { Button, Box, Typography, TextField } from "@mui/material";
-import { TodoListProps } from "../../types/todos";
-import { jstFormattedDate } from "../../utils/dateUtils";
-import { Status } from "../../types/todos";
+import { TodoListProps } from "../../../types/todos";
+import { jstFormattedDate } from "../../../utils/dateUtils";
+import { Status } from "../../../types/todos";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
-import StatusPullList from "../statusBox/StatusPullList";
+import StatusPullList from "../top/statusBox/StatusPullList";
 
 type ModalProp = {
 	todo?: TodoListProps;

@@ -1,7 +1,7 @@
 import { Button, Box } from "@mui/material";
 import { useState } from "react";
-import { Status } from "../types/todos";
-import Modal from "./modal/Modal";
+import { Status } from "../../../types/todos";
+import Modal from "../modal/Modal";
 
 type InputProps = {
 	clickOption: {

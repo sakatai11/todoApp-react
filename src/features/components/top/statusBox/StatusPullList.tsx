@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Autocomplete, TextField } from "@mui/material";
-import { Status } from "../../types/todos";
+import { Status } from "../../../../types/todos";
 
 type PullDownType = {
 	pullDownList: Status[];

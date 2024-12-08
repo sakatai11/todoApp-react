@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import { TodoListProps } from "./types/todos";
-import { StatusListProps } from "./types/lists";
-import Push from "./components/Push";
-import TodoList from "./components/TodoList";
-import Title from "./components/statusBox/Title";
-import ListAdd from "./components/ListAdd";
+import { TodoListProps } from "../../types/todos";
+import { StatusListProps } from "../../types/lists";
+import Push from "../components/top/Push";
+import TodoList from "../components/top/TodoList";
+import Title from "../components/top/statusBox/Title";
+import ListAdd from "../components/top/ListAdd";
 // import { statusesPull } from "./status/statuses"
-import { jstTime } from "./utils/dateUtils";
+import { jstTime } from "../../utils/dateUtils";
 // firebase
-import { db } from "./utils/firebase";
+import { db } from "../../utils/firebase";
 import {
 	doc,
 	getDocs,
@@ -21,7 +21,7 @@ import {
 	orderBy,
 } from "firebase/firestore";
 
-function App() {
+function BaseTop () {
 	const [todos, setTodos] = useState<TodoListProps[]>([]); // todoデータ
 	const [lists, setLists] = useState<StatusListProps[]>([]); // listデータ
 	const [input, setInput] = useState({
@@ -392,4 +392,4 @@ function App() {
 		</Box>
 	);
 }
-export default App;
+export default BaseTop;

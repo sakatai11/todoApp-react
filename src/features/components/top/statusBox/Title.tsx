@@ -1,7 +1,7 @@
 import { Box, IconButton } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import SelectListModal from "../modal/SelectListModal";
-import DeleteModal from "../modal/DeleteModal";
+import SelectListModal from "../../modal/SelectListModal";
+import DeleteModal from "../../modal/DeleteModal";
 import { useState, useEffect, useRef } from "react";
 
 type Prop = {
