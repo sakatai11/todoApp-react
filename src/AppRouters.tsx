@@ -1,5 +1,4 @@
 import { routes } from "./data/routers";
-
 import { Route, Routes } from "react-router-dom";
 
 function AppRouters() {

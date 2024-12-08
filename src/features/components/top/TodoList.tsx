@@ -59,11 +59,10 @@ const TodoList = ({
 						{content}
 					</a>
 				);
-			}
-			else if (type === "space") {
+			} else if (type === "linefeed") {
 				return <br key={index} />;
 			} else {
-				return  <React.Fragment key={index}>{content}</React.Fragment>;
+				return <React.Fragment key={index}>{content}</React.Fragment>;
 			}
 		});
 	};
