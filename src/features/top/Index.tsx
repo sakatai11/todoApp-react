@@ -12,16 +12,19 @@ import { jstTime } from "../../utils/dateUtils";
 import { db } from "../../utils/firebase";
 import {
 	doc,
-	getDocs,
 	addDoc,
 	collection,
 	deleteDoc,
-	updateDoc,
-	query,
-	orderBy,
+	updateDoc
 } from "firebase/firestore";
 
-function BaseTop() {
+type DataProps = {
+	todosData: TodoListProps[],
+	listsData: StatusListProps[],
+}
+
+function BaseTop({todosData, listsData}:DataProps) {
+
 	const [todos, setTodos] = useState<TodoListProps[]>([]); // todoデータ
 	const [lists, setLists] = useState<StatusListProps[]>([]); // listデータ
 	const [input, setInput] = useState({
@@ -36,35 +39,10 @@ function BaseTop() {
 	});
 
 	// 表示
-	const fetchTodos = async () => {
-		const qTodos = query(collection(db, "todos"), orderBy("time", "desc")); // 降順
-		const qLists = query(collection(db, "lists"), orderBy("number", "asc")); // 昇順
-		const todoSnapshot = await getDocs(qTodos);
-		const listSnapshot = await getDocs(qLists);
-		const todosData = todoSnapshot.docs.map((document) => ({
-			// オブジェクトにとして格納
-			id: document.id,
-			time: document.data().time,
-			text: document.data().text,
-			status: document.data().status,
-			bool: document.data().bool,
-		}));
-
-		console.log(todosData);
-		const sortedTodos = todosData.sort((a, b) => {
-			const timeComparison = b.time - a.time;
-			return timeComparison;
-		});
-		const listsData = listSnapshot.docs.map((document) => ({
-			// オブジェクトにとして格納
-			id: document.id,
-			category: document.data().category,
-			number: document.data().number,
-		}));
-		console.log(listsData);
-		setTodos(sortedTodos as TodoListProps[]);
+	const fetchDatas = () => {
+		console.log(lists);
+		setTodos(todosData as TodoListProps[]);
 		setLists(listsData as StatusListProps[]);
-		return sortedTodos;
 	};
 
 	// todo追加
@@ -206,7 +184,7 @@ function BaseTop() {
 
 	// 初期処理
 	useEffect(() => {
-		fetchTodos();
+		fetchDatas();
 	}, []);
 
 	return (
